@@ -1,0 +1,13 @@
+[workspace]
+resolver = "2"
+members = [
+    "dna/zomes/profiles",
+    "dna/zomes/posts",
+    "dna/zomes/comments",
+]
+
+[profile.dev]
+opt-level = "z"
+
+[profile.release]
+opt-level = "z"

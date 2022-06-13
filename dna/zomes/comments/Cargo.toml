@@ -1,0 +1,14 @@
+[package]
+edition = "2021"
+name = "comments"
+version = "0.0.1"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+name = "comments"
+
+[dependencies]
+serde = "1"
+derive_more = "0"
+
+hdk = {version="0.0.130", features = ["encoding"]}
