@@ -7,8 +7,9 @@
   ],
   "scripts": {
     "start": "npm run build:happ && npm run start:agent",
-    "network": "npm run build:happ && concurrently-repeat \"npm run start:agent\"",
+    "network": "hc s clean && npm run build:happ && concurrently-repeat \"npm run start:agent\"",
     "start:agent": "cross-env HC_PORT=$(port) concurrently -k \"npm run start:happ\" \"sleep 5 && npm run start -w ui\"",
+    "unimplement1": "node --es-module-specifier-resolution=node scripts/unimplement-profiles.mjs",
     "test": "npm run build:happ && npm t -w tests",
     "start:happ": "concurrently \"RUST_LOG=warn hc s generate ./workdir/forum.happ --run=$HC_PORT -a forum network mdns\" \"npm run playground\"",
     "package": "npm run build:happ && npm run package -w ui && hc web-app pack workdir",
@@ -19,6 +20,8 @@
   },
   "devDependencies": {
     "@holochain-playground/cli": "^0.0.8",
+    "@source-craft/fs": "^0.0.1",
+    "@source-craft/rust": "^0.0.3",
     "concurrently": "^6.2.1",
     "concurrently-repeat": "^0.0.1",
     "cross-env": "^7.0.3",
@@ -28,5 +31,6 @@
   },
   "engines": {
     "npm": ">=7.0.0"
-  }
+  },
+  "type": "module"
 }
