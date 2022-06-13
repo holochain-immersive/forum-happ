@@ -10,10 +10,14 @@ pub struct Profile {
 entry_defs![Profile::entry_def()];
 
 #[hdk_extern]
-pub fn get_my_profile(_: ()) -> ExternResult<Option<Profile>> {
+pub fn create_profile(profile: Profile) -> ExternResult<()> {
+    let header_hash = create_entry(&profile)?;
+
     let my_pub_key = agent_info()?.agent_initial_pubkey;
 
-    get_agent_profile(my_pub_key)
+    create_link(my_pub_key.into(), header_hash.into(), HdkLinkType::Any, ())?;
+
+    Ok(())
 }
 
 #[hdk_extern]
@@ -42,14 +46,10 @@ fn get_profile(header_hash: HeaderHash) -> ExternResult<Option<Profile>> {
 }
 
 #[hdk_extern]
-pub fn create_profile(profile: Profile) -> ExternResult<()> {
-    let header_hash = create_entry(&profile)?;
-
+pub fn get_my_profile(_: ()) -> ExternResult<Option<Profile>> {
     let my_pub_key = agent_info()?.agent_initial_pubkey;
 
-    create_link(my_pub_key.into(), header_hash.into(), HdkLinkType::Any, ())?;
-
-    Ok(())
+    get_agent_profile(my_pub_key)
 }
 
 #[hdk_extern]

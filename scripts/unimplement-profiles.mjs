@@ -14,6 +14,4 @@ dir = unimplementFunctions(dir, [
   "create_profile",
 ]);
 
-console.log(dir);
-
 writeDirectoryTree("dna/zomes/profiles/src", dir);
