@@ -15,6 +15,7 @@ import {
 } from '@holochain/client';
 
 import '../profiles/agent-nickname';
+import '../comments/comments-on-post';
 import isEqual from 'lodash-es/isEqual';
 
 import { Post } from '../../../types/forum/posts';
@@ -113,7 +114,9 @@ export class PostDetail extends LitElement {
             .date=${new Date(this._post.header.timestamp / 1000)}
           ></sl-relative-time>
         </div>
+
       </div>
+      <comments-on-post slot="footer" .postHash=${this.postHash}></comments-on-post>
     `;
   }
 }

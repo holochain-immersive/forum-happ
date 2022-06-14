@@ -73,6 +73,8 @@
     ],
     "rules": {
       "camelcase": "off",
+      "no-param-reassign": "off",
+      "class-methods-use-this": "off",
       "no-unused-vars": "off",
       "import/no-duplicates": "off",
       "prefer-destructuring": "off",
