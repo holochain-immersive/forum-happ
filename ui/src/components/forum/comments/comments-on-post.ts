@@ -9,7 +9,7 @@ import {
 } from '@holochain/client';
 import { contextProvided } from '@lit-labs/context';
 import { TextField } from '@material/mwc-textfield';
-
+import { isEqual } from 'lodash-es';
 
 import { appInfoContext, appWebsocketContext } from '../../../contexts';
 import { Comment } from '../../../types/forum/comments';
@@ -59,7 +59,7 @@ export class CommentsOnPost extends LitElement {
       (c: InstalledCell) => c.role_id === 'forum'
     )!;
 
-    this._comments = await this.appWebsocket.callZome({
+    await this.appWebsocket.callZome({
       cap_secret: null,
       cell_id: cellData.cell_id,
       zome_name: 'comments',
@@ -72,6 +72,23 @@ export class CommentsOnPost extends LitElement {
     await this.fetchComments();
   }
 
+  async deleteComment(comment: HeaderHash) {
+    const cellData = this.appInfo.cell_data.find(
+      (c: InstalledCell) => c.role_id === 'forum'
+    )!;
+
+    await this.appWebsocket.callZome({
+      cap_secret: null,
+      cell_id: cellData.cell_id,
+      zome_name: 'comments',
+      fn_name: 'delete_comment',
+      payload: comment,
+      provenance: cellData.cell_id[1],
+    });
+
+    await this.fetchComments();
+  }
+
   renderComment(comment: EntryWithHeader<Comment>) {
     return html`
       <div
@@ -79,7 +96,7 @@ export class CommentsOnPost extends LitElement {
       >
         <holo-identicon .hash=${comment.header.author}></holo-identicon>
         <div
-          style="display:flex; flex-direction: column;  align-items: start; margin-left: 16px;"
+          style="display:flex; flex: 1; flex-direction: column;  align-items: start; margin-left: 16px;"
         >
           <agent-nickname
             .agentPubKey=${comment.header.author}
@@ -88,6 +105,15 @@ export class CommentsOnPost extends LitElement {
             >${comment.entry.comment}</span
           >
         </div>
+
+        ${isEqual(comment.header.author, this.myPubKey)
+          ? html`
+              <mwc-icon-button
+                icon="delete"
+                @click=${() => this.deleteComment(comment.header_hash)}
+              ></mwc-icon-button>
+            `
+          : html``}
       </div>
     `;
   }
