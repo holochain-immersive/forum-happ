@@ -61,28 +61,29 @@ export class CreatePost extends LitElement {
   }
 
   render() {
-    return html` <div style="display: flex; flex-direction: column">
-      <span style="font-size: 18px">Create Post</span>
+    return html`<sl-card>
+      <div style="display: flex; flex-direction: column">
+        <span style="font-size: 18px">Create Post</span>
 
-      <create-title
-        @change=${(e: Event) => {
-          this._title = (e.target as any).value;
-        }}
-        style="margin-top: 16px"
-      ></create-title>
+        <create-title
+          @change=${(e: Event) => {
+            this._title = (e.target as any).value;
+          }}
+          style="margin-top: 16px"
+        ></create-title>
 
-      <create-content
-        @change=${(e: Event) => {
-          this._content = (e.target as any).value;
-        }}
-        style="margin-top: 16px"
-      ></create-content>
+        <create-content
+          @change=${(e: Event) => {
+            this._content = (e.target as any).value;
+          }}
+          style="margin-top: 16px"
+        ></create-content>
 
-      <mwc-button
-        label="Create Post"
-        .disabled=${!this.isPostValid()}
-        @click=${() => this.createPost()}
-      ></mwc-button>
-    </div>`;
+        <mwc-button
+          label="Create Post"
+          .disabled=${!this.isPostValid()}
+          @click=${() => this.createPost()}
+        ></mwc-button></div
+    ></sl-card>`;
   }
 }

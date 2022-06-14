@@ -13,10 +13,14 @@
     "package": "npm run build && cd dist && bestzip ../dist.zip *"
   },
   "dependencies": {
+    "@holochain-open-dev/utils": "^0.0.12",
     "@holochain/client": "0.3.2",
     "@lit-labs/context": "^0.1.1",
     "@material/mwc-button": "^0.25.3",
     "@material/mwc-circular-progress": "^0.25.3",
+    "@material/mwc-fab": "^0.26.1",
+    "@material/mwc-ripple": "^0.26.1",
+    "@material/mwc-top-app-bar": "^0.26.1",
     "@type-craft/content": "^0.0.7",
     "@type-craft/title": "^0.0.8",
     "@webcomponents/scoped-custom-element-registry": "0.0.5",
@@ -65,6 +69,7 @@
     "rules": {
       "camelcase": "off",
       "no-unused-vars": "off",
+      "prefer-destructuring": "off",
       "import/extensions": "off",
       "@typescript-eslint/no-unused-vars": [
         "error"

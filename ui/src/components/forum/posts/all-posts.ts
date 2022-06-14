@@ -48,6 +48,8 @@ export class AgentNickname extends LitElement {
       </div>`;
     }
 
+    if (this._allPosts.length === 0) return html`<span style="opacity: 0.6; margin-top: 256px;">There are no posts yet</span>`
+
     return this._allPosts.map(
       postHash =>
         html`<post-detail

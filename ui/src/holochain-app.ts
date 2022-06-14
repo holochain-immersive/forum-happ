@@ -2,10 +2,12 @@ import '@webcomponents/scoped-custom-element-registry';
 
 import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { AppWebsocket, InstalledAppInfo } from '@holochain/client';
+import { AgentPubKey, AppWebsocket, InstalledAppInfo } from '@holochain/client';
 import { contextProvider } from '@lit-labs/context';
 import '@material/mwc-circular-progress';
 import '@material/mwc-button';
+import '@material/mwc-top-app-bar';
+import '@material/mwc-fab';
 
 import './components/forum/profiles/create-profile';
 import './components/forum/profiles/agent-nickname';
@@ -30,6 +32,8 @@ export class HolochainApp extends LitElement {
   @state()
   creatingPost = false;
 
+  myPubKey!: AgentPubKey;
+
   async firstUpdated() {
     this.appWebsocket = await AppWebsocket.connect(
       `ws://localhost:${process.env.HC_PORT}`
@@ -41,13 +45,15 @@ export class HolochainApp extends LitElement {
 
     const cell = this.appInfo.cell_data[0];
 
+    this.myPubKey = cell.cell_id[1];
+
     const myProfile = await this.appWebsocket.callZome({
       cap_secret: null,
       cell_id: cell.cell_id,
       zome_name: 'profiles',
       fn_name: 'get_my_profile',
       payload: null,
-      provenance: cell.cell_id[1],
+      provenance: this.myPubKey,
     });
 
     this.profileCreated = !!myProfile;
@@ -56,6 +62,14 @@ export class HolochainApp extends LitElement {
   }
 
   renderContent() {
+    if (!this.profileCreated)
+      return html`<create-profile
+        style="margin-top: 264px;"
+        @profile-created=${() => {
+          this.profileCreated = true;
+        }}
+      ></create-profile>`;
+
     if (this.creatingPost)
       return html`<create-post
         @post-created=${() => {
@@ -64,14 +78,28 @@ export class HolochainApp extends LitElement {
       ></create-post>`;
 
     return html`
-      <div style="display: flex; flex-direction: column">
-        <mwc-button
-          label="Create post"
-          @click=${() => {
-            this.creatingPost = true;
-          }}
-        ></mwc-button>
-        <all-posts></all-posts>
+      <all-posts
+        style="display: flex; flex-direction: column; width: 800px;"
+      ></all-posts>
+      <mwc-fab
+        label="Create post"
+        style="position: fixed; right: 16px; bottom: 16px"
+        icon="add"
+        @click=${() => {
+          this.creatingPost = true;
+        }}
+      ></mwc-fab>
+
+    `;
+  }
+
+  renderActionItems() {
+    if (!this.profileCreated) return html``;
+
+    return html`
+      <div slot="actionItems" style="margin-left: 16px; display: flex; flex-direction: row; align-items: center;">
+        <holo-identicon .hash=${this.myPubKey}></holo-identicon>
+        <agent-nickname style="margin-left: 8px;" .agentPubKey=${this.myPubKey}></agent-nickname>
       </div>
     `;
   }
@@ -83,19 +111,16 @@ export class HolochainApp extends LitElement {
       `;
 
     return html`
-      <main>
-        <h1>forum</h1>
+      <mwc-top-app-bar style="flex: 1; display: flex; justify-content: center"
+        ><span slot="title">Forum</span>
 
-        ${this.profileCreated
-          ? this.renderContent()
-          : html`
-              <create-profile
-                @profile-created=${() => {
-                  this.profileCreated = true;
-                }}
-              ></create-profile>
-            `}
-      </main>
+        ${this.renderActionItems()}
+        <div
+          style="display: flex; flex: 1; flex-direction: column; height: 100%;"
+        >
+          ${this.renderContent()}
+        </div>
+      </mwc-top-app-bar>
     `;
   }
 
@@ -104,12 +129,7 @@ export class HolochainApp extends LitElement {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      font-size: calc(10px + 2vmin);
       color: #1a2b42;
-      max-width: 960px;
-      margin: 0 auto;
       text-align: center;
       background-color: var(--lit-element-background-color);
     }

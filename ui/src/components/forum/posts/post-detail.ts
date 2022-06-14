@@ -2,6 +2,7 @@ import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import '@material/mwc-circular-progress';
 import '@type-craft/title/title-detail';
+import '@holochain-open-dev/utils/holo-identicon';
 import '@type-craft/content/content-detail';
 import { contextProvided } from '@lit-labs/context';
 import {
@@ -70,6 +71,7 @@ export class PostDetail extends LitElement {
 
         <span style="align-self: end; font-size: 12px; color: grey"
           >Created by
+          <holo-identicon .hash=${this._post.header.author}></holo-identicon>
           <agent-nickname
             .agentPubKey=${this._post.header.author}
           ></agent-nickname

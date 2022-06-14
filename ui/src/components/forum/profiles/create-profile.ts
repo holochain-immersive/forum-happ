@@ -53,22 +53,24 @@ export class CreateProfile extends LitElement {
   }
 
   render() {
-    return html` <div style="display: flex; flex-direction: column">
-      <span style="font-size: 18px">Create Profile</span>
+    return html` <sl-card
+      ><div style="display: flex; flex-direction: column">
+        <span style="font-size: 18px">Create Profile</span>
 
-      <create-title
-        label="Nickname"
-        @change=${(e: Event) => {
-          this._nickname = (e.target as any).value;
-        }}
-        style="margin-top: 16px"
-      ></create-title>
+        <create-title
+          label="Nickname"
+          @change=${(e: Event) => {
+            this._nickname = (e.target as any).value;
+          }}
+          style="margin-top: 16px"
+        ></create-title>
 
-      <mwc-button
-        label="Create Profile"
-        .disabled=${!this.isProfileValid()}
-        @click=${() => this.createProfile()}
-      ></mwc-button>
-    </div>`;
+        <mwc-button
+          label="Create Profile"
+          .disabled=${!this.isProfileValid()}
+          @click=${() => this.createProfile()}
+        ></mwc-button>
+      </div>
+    </sl-card>`;
   }
 }
