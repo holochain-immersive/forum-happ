@@ -85,6 +85,7 @@ export class HolochainApp extends LitElement {
         label="Create post"
         style="position: fixed; right: 16px; bottom: 16px"
         icon="add"
+        extended
         @click=${() => {
           this.creatingPost = true;
         }}

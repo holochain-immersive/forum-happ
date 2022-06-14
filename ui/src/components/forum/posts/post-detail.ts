@@ -69,17 +69,24 @@ export class PostDetail extends LitElement {
           >${this._post.entry.content}</span
         >
 
-        <span style="align-self: end; font-size: 12px; color: grey"
-          >Created by
-          <holo-identicon .hash=${this._post.header.author}></holo-identicon>
+        <div
+          style="margin-top: 24px; align-self: end; font-size: 12px; color: grey; display: flex; flex-direction: row; align-items: center"
+        >
+          Created by
+          <holo-identicon
+            style="margin: 0 8px"
+            .hash=${this._post.header.author}
+            size="24"
+          ></holo-identicon>
           <agent-nickname
             .agentPubKey=${this._post.header.author}
           ></agent-nickname
           >,
           <sl-relative-time
+            style="margin-left: 4px;"
             .date=${new Date(this._post.header.timestamp / 1000)}
           ></sl-relative-time>
-        </span>
+        </div>
       </div>
     `;
   }

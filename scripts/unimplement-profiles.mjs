@@ -1,5 +1,5 @@
 import { readFolder, writeDirectoryTree } from "@source-craft/fs";
-import { unimplementFunctions } from "@source-craft/rust";
+import { replaceFunctionBody } from "@source-craft/rust";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -8,10 +8,8 @@ const __dirname = path.dirname(__filename);
 
 let dir = readFolder(`${__dirname}/../dna/zomes/profiles/src`);
 
-dir = unimplementFunctions(dir, [
-  "get_my_profile",
-  "get_agent_profile",
-  "create_profile",
-]);
+dir = replaceFunctionBody(dir, "get_my_profile", "Ok(None)");
+dir = replaceFunctionBody(dir, "get_agent_profile", "unimplemented!()");
+dir = replaceFunctionBody(dir, "create_profile", "unimplemented!()");
 
 writeDirectoryTree("dna/zomes/profiles/src", dir);

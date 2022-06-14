@@ -9,6 +9,7 @@ import { contextProvided } from '@lit-labs/context';
 import { appWebsocketContext, appInfoContext } from '../../../contexts';
 import { Post } from '../../../types/forum/posts';
 import '@material/mwc-button';
+import '@material/mwc-textarea';
 import '@type-craft/title/create-title';
 import '@type-craft/content/create-content';
 
@@ -62,7 +63,7 @@ export class CreatePost extends LitElement {
 
   render() {
     return html`<sl-card>
-      <div style="display: flex; flex-direction: column">
+      <div style="display: flex; flex-direction: column; align-items: start">
         <span style="font-size: 18px">Create Post</span>
 
         <create-title
@@ -72,15 +73,18 @@ export class CreatePost extends LitElement {
           style="margin-top: 16px"
         ></create-title>
 
-        <create-content
-          @change=${(e: Event) => {
+        <mwc-textarea
+          style="margin-top: 16px; width: 800px; height: 500px"
+          label="Content"
+          outlined
+          @input=${(e: Event) => {
             this._content = (e.target as any).value;
           }}
-          style="margin-top: 16px"
-        ></create-content>
+        ></mwc-textarea>
 
         <mwc-button
           label="Create Post"
+          style="align-self: end; margin-top: 24px"
           .disabled=${!this.isPostValid()}
           @click=${() => this.createPost()}
         ></mwc-button></div

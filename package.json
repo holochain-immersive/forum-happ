@@ -21,7 +21,7 @@
   "devDependencies": {
     "@holochain-playground/cli": "^0.0.8",
     "@source-craft/fs": "^0.0.1",
-    "@source-craft/rust": "^0.0.3",
+    "@source-craft/rust": "^0.0.4",
     "concurrently": "^6.2.1",
     "concurrently-repeat": "^0.0.1",
     "cross-env": "^7.0.3",
