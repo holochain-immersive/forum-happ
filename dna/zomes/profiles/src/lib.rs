@@ -51,8 +51,3 @@ pub fn get_my_profile(_: ()) -> ExternResult<Option<Profile>> {
 
     get_agent_profile(my_pub_key)
 }
-
-#[hdk_extern]
-pub fn validate(_op: Op) -> ExternResult<ValidateCallbackResult> {
-    Ok(ValidateCallbackResult::Valid)
-}

@@ -2,7 +2,12 @@ import '@webcomponents/scoped-custom-element-registry';
 
 import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { AgentPubKey, AppWebsocket, InstalledAppInfo } from '@holochain/client';
+import {
+  AgentPubKey,
+  AppWebsocket,
+  HeaderHash,
+  InstalledAppInfo,
+} from '@holochain/client';
 import { contextProvider } from '@lit-labs/context';
 import '@material/mwc-circular-progress';
 import '@material/mwc-button';
@@ -13,6 +18,7 @@ import './components/forum/profiles/create-profile';
 import './components/forum/profiles/agent-nickname';
 import './components/forum/posts/all-posts';
 import './components/forum/posts/create-post';
+import './components/forum/posts/edit-post';
 import { appWebsocketContext, appInfoContext } from './contexts';
 
 @customElement('holochain-app')
@@ -30,7 +36,10 @@ export class HolochainApp extends LitElement {
   appInfo!: InstalledAppInfo;
 
   @state()
-  creatingPost = false;
+  currentView:
+    | { view: 'main' }
+    | { view: 'creatingPost' }
+    | { view: 'updatingPost'; headerHash: HeaderHash } = { view: 'main' };
 
   myPubKey!: AgentPubKey;
 
@@ -70,16 +79,30 @@ export class HolochainApp extends LitElement {
         }}
       ></create-profile>`;
 
-    if (this.creatingPost)
+    if (this.currentView.view === 'creatingPost')
       return html`<create-post
         @post-created=${() => {
-          this.creatingPost = false;
+          this.currentView = { view: 'main' };
         }}
       ></create-post>`;
+
+    if (this.currentView.view === 'updatingPost')
+      return html`<edit-post
+        .postHash=${this.currentView.headerHash}
+        @post-updated=${() => {
+          this.currentView = { view: 'main' };
+        }}
+      ></edit-post>`;
 
     return html`
       <all-posts
         style="display: flex; flex-direction: column; width: 800px;"
+        @updating-post=${(e: CustomEvent) => {
+          this.currentView = {
+            view: 'updatingPost',
+            headerHash: e.detail.headerHash,
+          };
+        }}
       ></all-posts>
       <mwc-fab
         label="Create post"
@@ -87,10 +110,9 @@ export class HolochainApp extends LitElement {
         icon="add"
         extended
         @click=${() => {
-          this.creatingPost = true;
+          this.currentView = { view: 'creatingPost' };
         }}
       ></mwc-fab>
-
     `;
   }
 
@@ -98,9 +120,15 @@ export class HolochainApp extends LitElement {
     if (!this.profileCreated) return html``;
 
     return html`
-      <div slot="actionItems" style="margin-left: 16px; display: flex; flex-direction: row; align-items: center;">
+      <div
+        slot="actionItems"
+        style="margin-left: 16px; display: flex; flex-direction: row; align-items: center;"
+      >
         <holo-identicon .hash=${this.myPubKey}></holo-identicon>
-        <agent-nickname style="margin-left: 8px;" .agentPubKey=${this.myPubKey}></agent-nickname>
+        <agent-nickname
+          style="margin-left: 8px;"
+          .agentPubKey=${this.myPubKey}
+        ></agent-nickname>
       </div>
     `;
   }

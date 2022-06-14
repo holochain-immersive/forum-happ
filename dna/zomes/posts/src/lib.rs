@@ -35,28 +35,36 @@ pub fn get_all_posts(_: ()) -> ExternResult<Vec<HeaderHash>> {
     Ok(header_hashes)
 }
 
+
 #[hdk_extern]
 pub fn get_post(header_hash: HeaderHash) -> ExternResult<Option<EntryWithHeader<Post>>> {
-    let maybe_element = get(header_hash, GetOptions::default())?;
+    let element = get_latest_post(header_hash)?;
 
-    match maybe_element {
-        None => Ok(None),
-        Some(element) => {
-            let post: Post = element.entry().to_app_option()?.ok_or(WasmError::Guest(
-                "Could not deserialize element to Post.".into(),
-            ))?;
+    let post: Post = element.entry().to_app_option()?.ok_or(WasmError::Guest(
+        "Could not deserialize element to Post.".into(),
+    ))?;
 
-            Ok(Some(EntryWithHeader {
-                header: element.header().clone(),
-                header_hash: element.header_address().clone(),
-                entry: post,
-            }))
-        }
+    Ok(Some(EntryWithHeader {
+        header: element.header().clone(),
+        header_hash: element.header_address().clone(),
+        entry: post,
+    }))
+}
+
+fn get_latest_post(header_hash: HeaderHash) -> ExternResult<Element> {
+    let details = get_details(header_hash, GetOptions::default())?
+        .ok_or(WasmError::Guest("Post not found".into()))?;
+
+    match details {
+        Details::Entry(_) => Err(WasmError::Guest("Malformed details".into())),
+        Details::Element(element_details) => match element_details.updates.last() {
+            Some(update) => get_latest_post(update.header_address().clone()),
+            None => Ok(element_details.element),
+        },
     }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
 pub struct NewPostOutput {
     header_hash: HeaderHash,
     entry_hash: EntryHash,
@@ -86,7 +94,6 @@ pub fn create_post(post: Post) -> ExternResult<NewPostOutput> {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
 pub struct UpdatePostInput {
     original_header_hash: HeaderHash,
     updated_post: Post,
@@ -107,9 +114,4 @@ pub fn update_post(input: UpdatePostInput) -> ExternResult<NewPostOutput> {
     };
 
     Ok(output)
-}
-
-#[hdk_extern]
-pub fn delete_post(header_hash: HeaderHash) -> ExternResult<HeaderHash> {
-    delete_entry(HeaderHash::from(header_hash))
 }

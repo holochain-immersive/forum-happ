@@ -1,11 +1,13 @@
 import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import '@material/mwc-circular-progress';
+import '@material/mwc-icon-button';
 import '@type-craft/title/title-detail';
 import '@holochain-open-dev/utils/holo-identicon';
 import '@type-craft/content/content-detail';
 import { contextProvided } from '@lit-labs/context';
 import {
+  AgentPubKey,
   AppWebsocket,
   HeaderHash,
   InstalledAppInfo,
@@ -13,6 +15,7 @@ import {
 } from '@holochain/client';
 
 import '../profiles/agent-nickname';
+import isEqual from 'lodash-es/isEqual';
 
 import { Post } from '../../../types/forum/posts';
 import { EntryWithHeader } from '../../../types/helpers';
@@ -31,6 +34,10 @@ export class PostDetail extends LitElement {
 
   @contextProvided({ context: appInfoContext })
   appInfo!: InstalledAppInfo;
+
+  get myPubKey(): AgentPubKey {
+    return this.appInfo.cell_data[0].cell_id[1];
+  }
 
   async firstUpdated() {
     const cellData = this.appInfo.cell_data.find(
@@ -63,11 +70,30 @@ export class PostDetail extends LitElement {
       </div>`;
     }
     return html`
-      <div style="display: flex; flex-direction: column; align-items: start">
+      <div
+        style="display: flex; flex-direction: column; align-items: start; position: relative"
+      >
         <span style="font-size: 22px">${this._post.entry.title}</span>
         <span style="margin-top: 16px; font-size: 18px"
           >${this._post.entry.content}</span
         >
+
+        ${isEqual(this._post.header.author, this.myPubKey)
+          ? html`<mwc-icon-button
+              icon="edit"
+              style="position: absolute; right: -16px; top: -16px"
+              @click=${() =>
+                this.dispatchEvent(
+                  new CustomEvent('updating-post', {
+                    bubbles: true,
+                    composed: true,
+                    detail: {
+                      headerHash: this._post?.header_hash,
+                    },
+                  })
+                )}
+            ></mwc-icon-button>`
+          : html``}
 
         <div
           style="margin-top: 24px; align-self: end; font-size: 12px; color: grey; display: flex; flex-direction: row; align-items: center"
