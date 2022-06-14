@@ -10,6 +10,7 @@
     "network": "hc s clean && npm run build:happ && concurrently-repeat \"npm run start:agent\"",
     "start:agent": "cross-env HC_PORT=$(port) concurrently -k \"npm run start:happ\" \"sleep 5 && npm run start -w ui\"",
     "unimplement1": "node --es-module-specifier-resolution=node scripts/unimplement-profiles.mjs",
+    "unimplement2": "node --es-module-specifier-resolution=node scripts/unimplement-posts.mjs",
     "test": "npm run build:happ && npm t -w tests",
     "start:happ": "concurrently \"RUST_LOG=warn hc s generate ./workdir/forum.happ --run=$HC_PORT -a forum network mdns\" \"npm run playground\"",
     "package": "npm run build:happ && npm run package -w ui && hc web-app pack workdir",

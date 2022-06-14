@@ -9,6 +9,7 @@ pub struct Profile {
 
 entry_defs![Profile::entry_def()];
 
+// Create the given profile and associates it with our public key
 #[hdk_extern]
 pub fn create_profile(profile: Profile) -> ExternResult<()> {
     let header_hash = create_entry(&profile)?;
@@ -20,6 +21,7 @@ pub fn create_profile(profile: Profile) -> ExternResult<()> {
     Ok(())
 }
 
+// Gets the profile for the given agent, if they have created it
 #[hdk_extern]
 pub fn get_agent_profile(agent_pub_key: AgentPubKey) -> ExternResult<Option<Profile>> {
     let links = get_links(agent_pub_key.into(), None)?;
@@ -45,6 +47,7 @@ fn get_profile(header_hash: HeaderHash) -> ExternResult<Option<Profile>> {
     }
 }
 
+// Gets the profile of the current agent, if we have created it
 #[hdk_extern]
 pub fn get_my_profile(_: ()) -> ExternResult<Option<Profile>> {
     let my_pub_key = agent_info()?.agent_initial_pubkey;

@@ -8,6 +8,27 @@ pub struct Comment {
 
 entry_defs![Comment::entry_def()];
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct CreateCommentInput {
+    comment_on: HeaderHash,
+    comment: Comment,
+}
+
+// Creates a new Comment entry, associating it with the "comment_on" header
+#[hdk_extern]
+pub fn create_comment(input: CreateCommentInput) -> ExternResult<HeaderHash> {
+    let header_hash = create_entry(&input.comment)?;
+
+    create_link(
+        input.comment_on.into(),
+        header_hash.clone().into(),
+        HdkLinkType::Any,
+        (),
+    )?;
+
+    Ok(header_hash)
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct EntryWithHeader<E> {
     header_hash: HeaderHash,
@@ -15,6 +36,7 @@ pub struct EntryWithHeader<E> {
     entry: E,
 }
 
+// Gets all the "Comment" entries that have been associated with the given header
 #[hdk_extern]
 pub fn get_comments_on(header_hash: HeaderHash) -> ExternResult<Vec<EntryWithHeader<Comment>>> {
     let links = get_links(header_hash.into(), None)?;
@@ -45,26 +67,7 @@ pub fn get_comments_on(header_hash: HeaderHash) -> ExternResult<Vec<EntryWithHea
     Ok(comments)
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct CreateCommentInput {
-    comment_on: HeaderHash,
-    comment: Comment,
-}
-
-#[hdk_extern]
-pub fn create_comment(input: CreateCommentInput) -> ExternResult<HeaderHash> {
-    let header_hash = create_entry(&input.comment)?;
-
-    create_link(
-        input.comment_on.into(),
-        header_hash.clone().into(),
-        HdkLinkType::Any,
-        (),
-    )?;
-
-    Ok(header_hash)
-}
-
+// Deletes the given comment
 #[hdk_extern]
 pub fn delete_comment(header_hash: HeaderHash) -> ExternResult<()> {
     delete_entry(header_hash)?;
