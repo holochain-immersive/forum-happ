@@ -13,8 +13,8 @@
     "start:happ": "concurrently \"WASM_LOG=warn hc s generate ./workdir/forum.happ --run=$HC_PORT -a forum network -b https://bootstrap.holo.host quic -p kitsune-proxy://f3gH2VMkJ4qvZJOXx0ccL_Zo5n-s_CnBjSzAsEHHDCA/kitsune-quic/h/137.184.142.208/p/5788/-- \" \"npm run playground\"",
     "package": "npm run build:happ && npm run package -w ui && hc web-app pack workdir",
     "build:happ": "npm run build:dnas && hc app pack ./workdir",
-    "build:dnas": "npm run build:zomes && hc dna pack ./dna/workdir",
-    "build:zomes": "RUSTFLAGS=\"$RUSTFLAGS -A unused-imports -A dead_code -A unused_variables\" CARGO_TARGET_DIR=target cargo build --release --target wasm32-unknown-unknown",
+    "build:dnas": "npm run build:zomes && hc dna pack ./workdir",
+    "build:zomes": "RUSTFLAGS=\"$RUSTFLAGS -A unused-imports -A dead_code -A unused_variables\" CARGO_TARGET_DIR=target cargo build --release --target wasm32-unknown-unknown --features exercise${EXERCISE}step${STEP}",
     "playground": "run-singleton \"holochain-playground\""
   },
   "devDependencies": {

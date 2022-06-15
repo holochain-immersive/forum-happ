@@ -8,7 +8,14 @@ crate-type = ["cdylib", "rlib"]
 name = "profiles_zome"
 
 [dependencies]
-serde = "1"
 derive_more = "0"
+serde = "1"
 
-hdk = {version="0.0.130", features = ["encoding"]}
+hdk = {version = "0.0.130", features = ["encoding"]}
+
+[features]
+exercisestep = []
+exercise1step1 = []
+exercise1step2 = ["exercise1step1"]
+exercise1step3 = ["exercise1step2"]
+exercise1step4 = ["exercise1step3"]

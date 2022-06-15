@@ -9,7 +9,7 @@ roles:
       strategy: create
       deferred: false
     dna:
-      bundled: "../dna/workdir/forum.dna"
+      bundled: "./forum.dna"
       properties: ~
       uuid: ~
       version: ~
