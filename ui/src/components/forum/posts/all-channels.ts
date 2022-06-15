@@ -53,12 +53,12 @@ export class AllChannels extends LitElement {
       return html`<span style="opacity: 0.6; margin-top: 256px;"
         >There are no channels yet</span
       >`;
-    console.log(this.selectedChannel);
+
     return html`<mwc-list
       >${this._allChannels.map(
         channel =>
           html`<mwc-list-item
-            .selected=${channel === this.selectedChannel}
+            .activated=${channel === this.selectedChannel}
             @click=${() =>
               this.dispatchEvent(
                 new CustomEvent('channel-selected', {

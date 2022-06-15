@@ -9,7 +9,7 @@ import {
 } from '@holochain/client';
 import { contextProvided } from '@lit-labs/context';
 import { TextField } from '@material/mwc-textfield';
-import { isEqual } from 'lodash-es';
+import isEqual from 'lodash-es/isEqual';
 // import '@material/mwc-circular-progress';
 // import '@type-craft/content/content-detail';
 
@@ -36,7 +36,7 @@ export class CommentsOnPost extends LitElement {
   }
 
   async firstUpdated() {
-//    await this.fetchComments();
+    await this.fetchComments();
   }
 
   async fetchComments() {

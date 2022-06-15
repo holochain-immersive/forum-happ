@@ -103,25 +103,32 @@ export class HolochainApp extends LitElement {
       ></edit-post>`;
 
     return html`
-      <mwc-drawer>
+      <mwc-drawer hasHeader>
+        <span slot="title">Channels</span>
         <all-channels
           .selectedChannel=${this.currentView.selectedChannel}
           @channel-selected=${(e: CustomEvent) => {
             (this.currentView as any).selectedChannel = e.detail;
+            this.requestUpdate();
           }}
         ></all-channels>
 
-        <channel-posts
-          slot="appContent"
-          .channel=${this.currentView.selectedChannel}
-          style="display: flex; flex-direction: column; width: 800px;"
-          @updating-post=${(e: CustomEvent) => {
-            this.currentView = {
-              view: 'updatingPost',
-              headerHash: e.detail.headerHash,
-            };
-          }}
-        ></channel-posts>
+        <div slot="appContent" class="flex-scrollable-parent">
+          <div class="flex-scrollable-container">
+            <div class="flex-scrollable-y">
+              <channel-posts
+                .channel=${this.currentView.selectedChannel}
+                style="display: flex; flex-direction: column; width: 800px;"
+                @updating-post=${(e: CustomEvent) => {
+                  this.currentView = {
+                    view: 'updatingPost',
+                    headerHash: e.detail.headerHash,
+                  };
+                }}
+              ></channel-posts>
+            </div>
+          </div>
+        </div>
       </mwc-drawer>
       <mwc-fab
         label="Create post"
@@ -164,7 +171,7 @@ export class HolochainApp extends LitElement {
 
         ${this.renderActionItems()}
         <div
-          style="display: flex; flex: 1; flex-direction: column; height: 100%;"
+          style="display: flex; flex: 1; flex-direction: column; height: 100%; width: 100vw"
         >
           ${this.renderContent()}
         </div>
@@ -182,6 +189,21 @@ export class HolochainApp extends LitElement {
       background-color: var(--lit-element-background-color);
     }
 
+    .flex-scrollable-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+    .flex-scrollable-x {
+      max-width: 100%;
+      overflow-x: auto;
+    }
+    .flex-scrollable-y {
+      max-height: 100%;
+      overflow-y: auto;
+    }
     main {
       flex-grow: 1;
     }

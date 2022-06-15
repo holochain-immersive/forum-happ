@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit';
+import { LitElement, html, PropertyValues } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import {
   InstalledCell,
@@ -27,22 +27,24 @@ export class ChannelPosts extends LitElement {
   @contextProvided({ context: appInfoContext })
   appInfo!: InstalledAppInfo;
 
-  async firstUpdated() {
+  async updated(changedValues: PropertyValues) {
+    super.updated(changedValues);
 
-    console.log('hi');
-    console.log('hi');
-    /* 
-    const cellData = this.appInfo.cell_data.find(
-      (c: InstalledCell) => c.role_id === 'forum'
-    )!;
-    this._channelPosts = await this.appWebsocket.callZome({
-      cap_secret: null,
-      cell_id: cellData.cell_id,
-      zome_name: 'posts',
-      fn_name: 'get_channel_posts',
-      payload: this.channel,
-      provenance: cellData.cell_id[1],
-    }); */
+    if (changedValues.has('channel')) {
+      this._channelPosts = undefined;
+
+      const cellData = this.appInfo.cell_data.find(
+        (c: InstalledCell) => c.role_id === 'forum'
+      )!;
+      this._channelPosts = await this.appWebsocket.callZome({
+        cap_secret: null,
+        cell_id: cellData.cell_id,
+        zome_name: 'posts',
+        fn_name: 'get_channel_posts',
+        payload: this.channel,
+        provenance: cellData.cell_id[1],
+      });
+    }
   }
 
   render() {

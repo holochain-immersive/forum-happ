@@ -93,7 +93,9 @@ export class CreatePost extends LitElement {
     return html`<sl-card>
       <div style="display: flex; flex-direction: column; align-items: start">
         <span style="font-size: 18px">Create Post</span>
-        <div style="display: flex; flex-direction: row; ">
+        <div
+          style="display: flex; flex-direction: row; align-self: stretch; align-items: center;"
+        >
           <create-title
             @change=${(e: Event) => {
               this._title = (e.target as any).value;
@@ -104,6 +106,10 @@ export class CreatePost extends LitElement {
 
           <vaadin-combo-box
             id="channel-selector"
+            allow-custom-value
+            label="Channel"
+            helper-text="Select or create a new one"
+            style="text-align: start"
             .items=${this._allChannels}
             @value-changed=${(e: CustomEvent) => {
               this._channel = e.detail.value;
