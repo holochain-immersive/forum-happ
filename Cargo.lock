@@ -94,6 +94,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "comments_zome"
+version = "0.0.1"
+dependencies = [
+ "derive_more",
+ "hdk",
+ "serde",
+]
+
+[[package]]
 name = "constant_time_eq"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -428,6 +437,16 @@ version = "0.0.1"
 dependencies = [
  "derive_more",
  "hdk",
+ "posts_zome",
+ "serde",
+]
+
+[[package]]
+name = "posts_zome"
+version = "0.0.1"
+dependencies = [
+ "derive_more",
+ "hdk",
  "serde",
 ]
 
@@ -442,6 +461,16 @@ dependencies = [
 
 [[package]]
 name = "profiles"
+version = "0.0.1"
+dependencies = [
+ "derive_more",
+ "hdk",
+ "profiles_zome",
+ "serde",
+]
+
+[[package]]
+name = "profiles_zome"
 version = "0.0.1"
 dependencies = [
  "derive_more",

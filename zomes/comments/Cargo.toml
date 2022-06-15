@@ -1,15 +1,14 @@
 [package]
 edition = "2021"
-name = "posts"
+name = "comments_zome"
 version = "0.0.1"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
-name = "posts"
+name = "comments_zome"
 
 [dependencies]
 serde = "1"
 derive_more = "0"
 
 hdk = {version="0.0.130", features = ["encoding"]}
-posts_zome = {path = "../../../zomes/posts"}

@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit';
-import { state, customElement } from 'lit/decorators.js';
+import { state, customElement, property } from 'lit/decorators.js';
 import {
   InstalledCell,
   AppWebsocket,
@@ -13,10 +13,13 @@ import '@type-craft/title/title-detail';
 
 import './post-detail';
 
-@customElement('all-posts')
-export class AgentNickname extends LitElement {
+@customElement('channel-posts')
+export class ChannelPosts extends LitElement {
+  @property()
+  channel!: string;
+
   @state()
-  _allPosts: Array<HeaderHash> | undefined;
+  _channelPosts: Array<HeaderHash> | undefined;
 
   @contextProvided({ context: appWebsocketContext })
   appWebsocket!: AppWebsocket;
@@ -25,22 +28,25 @@ export class AgentNickname extends LitElement {
   appInfo!: InstalledAppInfo;
 
   async firstUpdated() {
+
+    console.log('hi');
+    console.log('hi');
+    /* 
     const cellData = this.appInfo.cell_data.find(
       (c: InstalledCell) => c.role_id === 'forum'
     )!;
-
-    this._allPosts = await this.appWebsocket.callZome({
+    this._channelPosts = await this.appWebsocket.callZome({
       cap_secret: null,
       cell_id: cellData.cell_id,
       zome_name: 'posts',
-      fn_name: 'get_all_posts',
-      payload: null,
+      fn_name: 'get_channel_posts',
+      payload: this.channel,
       provenance: cellData.cell_id[1],
-    });
+    }); */
   }
 
   render() {
-    if (!this._allPosts) {
+    if (!this._channelPosts) {
       return html`<div
         style="display: flex; flex: 1; align-items: center; justify-content: center"
       >
@@ -48,9 +54,12 @@ export class AgentNickname extends LitElement {
       </div>`;
     }
 
-    if (this._allPosts.length === 0) return html`<span style="opacity: 0.6; margin-top: 256px;">There are no posts yet</span>`
+    if (this._channelPosts.length === 0)
+      return html`<span style="opacity: 0.6; margin-top: 256px;"
+        >There are no posts yet</span
+      >`;
 
-    return this._allPosts.map(
+    return this._channelPosts.map(
       postHash =>
         html`<post-detail
           .postHash=${postHash}

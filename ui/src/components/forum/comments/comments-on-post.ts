@@ -10,11 +10,11 @@ import {
 import { contextProvided } from '@lit-labs/context';
 import { TextField } from '@material/mwc-textfield';
 import { isEqual } from 'lodash-es';
+// import '@material/mwc-circular-progress';
+// import '@type-craft/content/content-detail';
 
 import { appInfoContext, appWebsocketContext } from '../../../contexts';
 import { Comment } from '../../../types/forum/comments';
-import '@material/mwc-circular-progress';
-import '@type-craft/content/content-detail';
 import { EntryWithHeader } from '../../../types/helpers';
 
 @customElement('comments-on-post')
@@ -36,7 +36,7 @@ export class CommentsOnPost extends LitElement {
   }
 
   async firstUpdated() {
-    await this.fetchComments();
+//    await this.fetchComments();
   }
 
   async fetchComments() {

@@ -1,5 +1,10 @@
 # forum
 
+
+## Your goals
+
+
+
 ## Environment Setup
 
 1. Install the holochain dev environment (only nix-shell is required): https://developer.holochain.org/docs/install/
@@ -34,34 +39,6 @@ Substitute the "3" for the number of nodes that you want to bootstrap in your ne
 
 This will also bring up the Holochain Playground for advanced introspection of the conductors.
 
-## Running an agent
- 
-If you only want to run a single conductor and a UI connected to it:
-
-```bash
-npm start
-```
-
-To run another agent, open another terminal, and execute again:
-
-```bash
-npm start
-```
-
-Each new agent that you create this way will get assigned its own port and get connected to the other agents.
-
-## Running the DNA tests
-
-```bash
-npm run test
-```
-
-## Building the DNA
-
-```bash
-npm run build:happ
-```
-
 ## Package
 
 To package the web happ:
@@ -81,5 +58,5 @@ This repository is using this tooling:
 - [NPM Workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces/): npm v7's built-in monorepo capabilities.
 - [hc](https://github.com/holochain/holochain/tree/develop/crates/hc): Holochain CLI to easily manage Holochain development instances.
 - [@holochain/tryorama](https://www.npmjs.com/package/@holochain/tryorama): test framework.
-- [@holochain/conductor-api](https://www.npmjs.com/package/@holochain/conductor-api): client library to connect to Holochain from the UI.
+- [@holochain/client](https://www.npmjs.com/package/@holochain/client): client library to connect to Holochain from the UI.
 - [@holochain-playground/cli](https://www.npmjs.com/package/@holochain-playground/cli): introspection tooling to understand what's going on in the Holochain nodes.

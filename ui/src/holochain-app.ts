@@ -12,13 +12,15 @@ import { contextProvider } from '@lit-labs/context';
 import '@material/mwc-circular-progress';
 import '@material/mwc-button';
 import '@material/mwc-top-app-bar';
+import '@material/mwc-drawer';
 import '@material/mwc-fab';
 
 import './components/forum/profiles/create-profile';
 import './components/forum/profiles/agent-nickname';
-import './components/forum/posts/all-posts';
+import './components/forum/posts/channel-posts';
 import './components/forum/posts/create-post';
 import './components/forum/posts/edit-post';
+import './components/forum/posts/all-channels';
 import { appWebsocketContext, appInfoContext } from './contexts';
 
 @customElement('holochain-app')
@@ -37,9 +39,12 @@ export class HolochainApp extends LitElement {
 
   @state()
   currentView:
-    | { view: 'main' }
+    | { view: 'main'; selectedChannel: string }
     | { view: 'creatingPost' }
-    | { view: 'updatingPost'; headerHash: HeaderHash } = { view: 'main' };
+    | { view: 'updatingPost'; headerHash: HeaderHash } = {
+    view: 'main',
+    selectedChannel: 'general',
+  };
 
   myPubKey!: AgentPubKey;
 
@@ -81,8 +86,11 @@ export class HolochainApp extends LitElement {
 
     if (this.currentView.view === 'creatingPost')
       return html`<create-post
-        @post-created=${() => {
-          this.currentView = { view: 'main' };
+        @post-created=${(e: any) => {
+          this.currentView = {
+            view: 'main',
+            selectedChannel: e.detail.channel,
+          };
         }}
       ></create-post>`;
 
@@ -90,20 +98,31 @@ export class HolochainApp extends LitElement {
       return html`<edit-post
         .postHash=${this.currentView.headerHash}
         @post-updated=${() => {
-          this.currentView = { view: 'main' };
+          this.currentView = { view: 'main', selectedChannel: 'general' };
         }}
       ></edit-post>`;
 
     return html`
-      <all-posts
-        style="display: flex; flex-direction: column; width: 800px;"
-        @updating-post=${(e: CustomEvent) => {
-          this.currentView = {
-            view: 'updatingPost',
-            headerHash: e.detail.headerHash,
-          };
-        }}
-      ></all-posts>
+      <mwc-drawer>
+        <all-channels
+          .selectedChannel=${this.currentView.selectedChannel}
+          @channel-selected=${(e: CustomEvent) => {
+            (this.currentView as any).selectedChannel = e.detail;
+          }}
+        ></all-channels>
+
+        <channel-posts
+          slot="appContent"
+          .channel=${this.currentView.selectedChannel}
+          style="display: flex; flex-direction: column; width: 800px;"
+          @updating-post=${(e: CustomEvent) => {
+            this.currentView = {
+              view: 'updatingPost',
+              headerHash: e.detail.headerHash,
+            };
+          }}
+        ></channel-posts>
+      </mwc-drawer>
       <mwc-fab
         label="Create post"
         style="position: fixed; right: 16px; bottom: 16px"

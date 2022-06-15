@@ -13,10 +13,10 @@ import {
   InstalledAppInfo,
   InstalledCell,
 } from '@holochain/client';
+import isEqual from 'lodash-es/isEqual';
 
 import '../profiles/agent-nickname';
 import '../comments/comments-on-post';
-import isEqual from 'lodash-es/isEqual';
 
 import { Post } from '../../../types/forum/posts';
 import { EntryWithHeader } from '../../../types/helpers';
