@@ -1,7 +1,6 @@
 use hdk::prelude::*;
 
 #[hdk_entry(id = "post")]
-#[derive(Clone)]
 pub struct Post {
     pub title: String,
     pub content: String,
@@ -77,27 +76,12 @@ pub fn get_channel_posts(channel: String) -> ExternResult<Vec<HeaderHash>> {
     Ok(header_hashes)
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct EntryWithHeader<E> {
-    header_hash: HeaderHash,
-    header: Header,
-    entry: E,
-}
-
 // Get the latest post content from its original header hash
 #[hdk_extern]
-pub fn get_post(header_hash: HeaderHash) -> ExternResult<Option<EntryWithHeader<Post>>> {
+pub fn get_post(header_hash: HeaderHash) -> ExternResult<Option<Element>> {
     let element = get_latest_post(header_hash)?;
 
-    let post: Post = element.entry().to_app_option()?.ok_or(WasmError::Guest(
-        "Could not deserialize element to Post.".into(),
-    ))?;
-
-    Ok(Some(EntryWithHeader {
-        header: element.header().clone(),
-        header_hash: element.header_address().clone(),
-        entry: post,
-    }))
+    Ok(Some(element))
 }
 
 fn get_latest_post(header_hash: HeaderHash) -> ExternResult<Element> {

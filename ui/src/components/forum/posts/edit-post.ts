@@ -14,10 +14,10 @@ import { TextArea } from '@material/mwc-textarea';
 import { TextField } from '@material/mwc-textfield';
 import '@type-craft/title/create-title';
 import '@type-craft/content/create-content';
+import { Element } from '@holochain-open-dev/core-types';
 
 import { appWebsocketContext, appInfoContext } from '../../../contexts';
-import { Post } from '../../../types/forum/posts';
-import { EntryWithHeader } from '../../../types/helpers';
+import { extractEntry, extractHeaderHash } from '../../../utils';
 
 @customElement('edit-post')
 export class EditPost extends LitElement {
@@ -35,7 +35,7 @@ export class EditPost extends LitElement {
   }
 
   @state()
-  _post!: EntryWithHeader<Post> | undefined;
+  _post!: Element | undefined;
 
   @state()
   _title!: string;
@@ -53,8 +53,8 @@ export class EditPost extends LitElement {
     const cellData = this.appInfo.cell_data.find(
       (c: InstalledCell) => c.role_id === 'forum'
     )!;
-    
-    const post: EntryWithHeader<Post> = await this.appWebsocket.callZome({
+
+    const post: any = await this.appWebsocket.callZome({
       cap_secret: null,
       cell_id: cellData.cell_id,
       zome_name: 'posts',
@@ -63,8 +63,8 @@ export class EditPost extends LitElement {
       provenance: cellData.cell_id[1],
     });
 
-    this._title = post.entry.title;
-    this._content = post.entry.content;
+    this._title = extractEntry(post).title;
+    this._content = extractEntry(post).content;
     setTimeout(() => {
       this.titleField.value = this._title;
       this.contentField.value = this._content;
@@ -83,7 +83,7 @@ export class EditPost extends LitElement {
       zome_name: 'posts',
       fn_name: 'update_post',
       payload: {
-        original_header_hash: this._post?.header_hash,
+        original_header_hash: extractHeaderHash(this._post!),
         updated_post: {
           title: this._title,
           content: this._content,

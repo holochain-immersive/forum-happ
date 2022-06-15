@@ -3,7 +3,7 @@ import { pause, runScenario, Scenario } from "@holochain/tryorama";
 import test from "tape-promise/tape.js";
 import { forumDnaPath } from "./utils";
 
-test("create profile and retrieve it", async (t) => {
+test("profiles zome: create profile and retrieve it", async (t) => {
   try {
     await runScenario(async (scenario: Scenario) => {
       // Construct proper paths for your DNAs.
@@ -30,20 +30,13 @@ test("create profile and retrieve it", async (t) => {
 
       // The cells of the installed hApp are returned in the same order as the DNAs
       // that were passed into the player creation.
-      const createProfilePromise = alice.cells[0].callZome({
+      await alice.cells[0].callZome({
         zome_name: "profiles",
         fn_name: "create_profile",
         payload: {
           nickname: "Alice",
         },
       });
-
-      t.doesNotReject(
-        createProfilePromise,
-        'should be able to create a profile of the form { nickname: "Alice" }'
-      );
-
-      await createProfilePromise;
 
       // Wait for the created entry to be propagated to the other node.
       await pause(100);

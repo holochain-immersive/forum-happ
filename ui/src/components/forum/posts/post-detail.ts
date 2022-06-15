@@ -6,6 +6,7 @@ import '@type-craft/title/title-detail';
 import '@holochain-open-dev/utils/holo-identicon';
 import '@type-craft/content/content-detail';
 import { contextProvided } from '@lit-labs/context';
+import { Element } from '@holochain-open-dev/core-types';
 import {
   AgentPubKey,
   AppWebsocket,
@@ -18,9 +19,8 @@ import isEqual from 'lodash-es/isEqual';
 import '../profiles/agent-nickname';
 import '../comments/comments-on-post';
 
-import { Post } from '../../../types/forum/posts';
-import { EntryWithHeader } from '../../../types/helpers';
 import { appInfoContext, appWebsocketContext } from '../../../contexts';
+import { extractEntry, extractHeader, extractHeaderHash } from '../../../utils';
 
 @customElement('post-detail')
 export class PostDetail extends LitElement {
@@ -28,7 +28,7 @@ export class PostDetail extends LitElement {
   postHash!: HeaderHash;
 
   @state()
-  _post!: EntryWithHeader<Post> | undefined;
+  _post!: Element | undefined;
 
   @contextProvided({ context: appWebsocketContext })
   appWebsocket!: AppWebsocket;
@@ -74,12 +74,12 @@ export class PostDetail extends LitElement {
       <div
         style="display: flex; flex-direction: column; align-items: start; position: relative"
       >
-        <span style="font-size: 22px">${this._post.entry.title}</span>
+        <span style="font-size: 22px">${extractEntry(this._post).title}</span>
         <span style="margin-top: 16px; font-size: 18px"
-          >${this._post.entry.content}</span
+          >${extractEntry(this._post).content}</span
         >
 
-        ${isEqual(this._post.header.author, this.myPubKey)
+        ${isEqual(extractHeader(this._post).author, this.myPubKey)
           ? html`<mwc-icon-button
               icon="edit"
               style="position: absolute; right: -16px; top: -16px"
@@ -89,7 +89,7 @@ export class PostDetail extends LitElement {
                     bubbles: true,
                     composed: true,
                     detail: {
-                      headerHash: this._post?.header_hash,
+                      headerHash: extractHeaderHash(this._post!),
                     },
                   })
                 )}
@@ -102,21 +102,23 @@ export class PostDetail extends LitElement {
           Created by
           <holo-identicon
             style="margin: 0 8px"
-            .hash=${this._post.header.author}
+            .hash=${extractHeader(this._post).author}
             size="24"
           ></holo-identicon>
           <agent-nickname
-            .agentPubKey=${this._post.header.author}
+            .agentPubKey=${extractHeader(this._post).author}
           ></agent-nickname
           >,
           <sl-relative-time
             style="margin-left: 4px;"
-            .date=${new Date(this._post.header.timestamp / 1000)}
+            .date=${new Date(extractHeader(this._post).timestamp / 1000)}
           ></sl-relative-time>
         </div>
-
       </div>
-      <comments-on-post slot="footer" .postHash=${this.postHash}></comments-on-post>
+      <comments-on-post
+        slot="footer"
+        .postHash=${this.postHash}
+      ></comments-on-post>
     `;
   }
 }

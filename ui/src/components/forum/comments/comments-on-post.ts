@@ -7,15 +7,15 @@ import {
   HeaderHash,
   AgentPubKey,
 } from '@holochain/client';
+import { Element } from '@holochain-open-dev/core-types';
 import { contextProvided } from '@lit-labs/context';
 import { TextField } from '@material/mwc-textfield';
 import isEqual from 'lodash-es/isEqual';
-// import '@material/mwc-circular-progress';
-// import '@type-craft/content/content-detail';
+import '@material/mwc-circular-progress';
+import '@type-craft/content/content-detail';
 
 import { appInfoContext, appWebsocketContext } from '../../../contexts';
-import { Comment } from '../../../types/forum/comments';
-import { EntryWithHeader } from '../../../types/helpers';
+import { extractEntry, extractHeader, extractHeaderHash } from '../../../utils';
 
 @customElement('comments-on-post')
 export class CommentsOnPost extends LitElement {
@@ -23,7 +23,7 @@ export class CommentsOnPost extends LitElement {
   postHash!: HeaderHash;
 
   @state()
-  _comments: Array<EntryWithHeader<Comment>> | undefined;
+  _comments: Array<Element> | undefined;
 
   @contextProvided({ context: appWebsocketContext })
   appWebsocket!: AppWebsocket;
@@ -64,7 +64,7 @@ export class CommentsOnPost extends LitElement {
       cell_id: cellData.cell_id,
       zome_name: 'comments',
       fn_name: 'create_comment',
-      payload: { comment_on: this.postHash, comment: { comment: field.value } },
+      payload: { comment_on: this.postHash, comment: field.value },
       provenance: cellData.cell_id[1],
     });
 
@@ -89,28 +89,31 @@ export class CommentsOnPost extends LitElement {
     await this.fetchComments();
   }
 
-  renderComment(comment: EntryWithHeader<Comment>) {
+  renderComment(comment: Element) {
     return html`
       <div
         style="display:flex; flex: 1; flex-direction: row; margin-bottom: 16px;"
       >
-        <holo-identicon .hash=${comment.header.author}></holo-identicon>
+        <holo-identicon
+          .hash=${extractHeader(comment).author}
+        ></holo-identicon>
         <div
           style="display:flex; flex: 1; flex-direction: column;  align-items: start; margin-left: 16px;"
         >
           <agent-nickname
-            .agentPubKey=${comment.header.author}
+            .agentPubKey=${extractHeader(comment).author}
           ></agent-nickname>
           <span style="opacity: 0.8; margin-top: 4px"
-            >${comment.entry.comment}</span
+            >${extractEntry(comment).comment}</span
           >
         </div>
 
-        ${isEqual(comment.header.author, this.myPubKey)
+        ${isEqual(extractHeader(comment).author, this.myPubKey)
           ? html`
               <mwc-icon-button
                 icon="delete"
-                @click=${() => this.deleteComment(comment.header_hash)}
+                @click=${() =>
+                  this.deleteComment(extractHeaderHash(comment))}
               ></mwc-icon-button>
             `
           : html``}

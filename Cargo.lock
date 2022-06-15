@@ -88,6 +88,7 @@ dependencies = [
 name = "comments"
 version = "0.0.1"
 dependencies = [
+ "comments_zome",
  "derive_more",
  "hdk",
  "serde",

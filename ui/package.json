@@ -13,6 +13,7 @@
     "package": "npm run build && cd dist && bestzip ../dist.zip *"
   },
   "dependencies": {
+    "@holochain-open-dev/core-types": "^0.2.0",
     "@holochain-open-dev/utils": "^0.0.12",
     "@holochain/client": "0.4.1",
     "@lit-labs/context": "^0.1.1",
@@ -26,6 +27,7 @@
     "@material/mwc-textarea": "^0.26.1",
     "@material/mwc-textfield": "^0.26.1",
     "@material/mwc-top-app-bar": "^0.26.1",
+    "@msgpack/msgpack": "^2.7.2",
     "@type-craft/content": "^0.0.7",
     "@type-craft/title": "^0.0.8",
     "@vaadin/combo-box": "^23.1.1",
