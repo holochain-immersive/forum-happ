@@ -83,7 +83,7 @@ export class EditPost extends LitElement {
       zome_name: 'posts',
       fn_name: 'update_post',
       payload: {
-        original_header_hash: extractHeaderHash(this._post!),
+        post_to_update: extractHeaderHash(this._post!),
         updated_post: {
           title: this._title,
           content: this._content,
