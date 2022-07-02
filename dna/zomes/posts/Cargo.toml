@@ -8,8 +8,8 @@ crate-type = ["cdylib", "rlib"]
 name = "posts"
 
 [dependencies]
-serde = "1"
 derive_more = "0"
+serde = "1"
 
-hdk = {version="0.0.130", features = ["encoding"]}
+hdk = {version = "0.0.140"}
 posts_zome = {path = "../../../zomes/posts"}

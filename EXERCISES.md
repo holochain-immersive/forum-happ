@@ -64,15 +64,15 @@ Solve the next steps in the `comments` zome, in `dna/zomes/comments/lib.rs`.
 - Annotate this struct with `#[hdk_entry]` to declare it as a Holochain entry.
 - Add the `Comment` entry type to the `entry_defs![]` for the zome.
 
-2. Create a function `create_comment` that receives a `CreateCommentInput` struct, creates the comment and returns the `HeaderHash` of the created comment.
+2. Create a function `create_comment` that receives a `CreateCommentInput` struct, creates the comment and returns the `ActionHash` of the created comment.
 
 - Define the `CreateCommentInput` as a struct that has two fields:
-  - `comment_on`, of type `HeaderHash`. This refers the post that is being commented on.
+  - `comment_on`, of type `ActionHash`. This refers the post that is being commented on.
   - `comment`, of type String, the actual comment.
 
-3. Create a function `get_comments_on` that receives a `HeaderHash` for a post and returns all the comments that have been created for that post, in the form of a `Vec<Element>`.
+3. Create a function `get_comments_on` that receives a `ActionHash` for a post and returns all the comments that have been created for that post, in the form of a `Vec<Record>`.
 
-4. Create a function `delete_comment` that receives the `HeaderHash` of the comment that is to be deleted, and deletes that comment.
+4. Create a function `delete_comment` that receives the `ActionHash` of the comment that is to be deleted, and deletes that comment.
 
 
 ## Exercise 3: Posts zome
@@ -92,7 +92,7 @@ Solve the next steps in the `posts` zome, in `dna/zomes/posts/lib.rs`.
 - Annotate this struct with `#[hdk_entry]` to declare it as a Holochain entry.
 - Add the `Post` entry type to the `entry_defs![]` for the zome.
 
-2. Create a function `create_post` that receives a `CreatePostInput` struct, creates the post and returns the `HeaderHash` of the created post. Define the `CreatePostInput` as a struct that has a field `post` of type `Post`.
+2. Create a function `create_post` that receives a `CreatePostInput` struct, creates the post and returns the `ActionHash` of the created post. Define the `CreatePostInput` as a struct that has a field `post` of type `Post`.
 
 3. Add the `PathEntry` entry definition to the array of entry definitions.
 
@@ -101,10 +101,10 @@ Solve the next steps in the `posts` zome, in `dna/zomes/posts/lib.rs`.
 
 5. Change the function `create_post` so that after the channel path gets created, it also creates a link from the entry hash of that channel path to the header hash of the created post.
 
-6. Create a function `get_channel_posts` that receives a channel `String`, and returns a `Vec<HeaderHash>` for all the posts that have been created in this in the given channel. The header hashes should be ordered by the time that they were created in descendant order (most recent ones first).
+6. Create a function `get_channel_posts` that receives a channel `String`, and returns a `Vec<ActionHash>` for all the posts that have been created in this in the given channel. The header hashes should be ordered by the time that they were created in descendant order (most recent ones first).
 
 7. Create a function `get_all_channels` that doesn't receive any input parameter, and returns a `Vec<String>` with the names of all the channels that have been created.
 
-8. Create a function `update_post`, that receives as input an `UpdatePostInput` struct, updates the post and returns the `HeaderHash` of the updated post. Define the `UpdatePostInput` as a struct that has a field `udpated_post` of type `Post`, and an `post_to_update` field of type `HeaderHash`.
+8. Create a function `update_post`, that receives as input an `UpdatePostInput` struct, updates the post and returns the `ActionHash` of the updated post. Define the `UpdatePostInput` as a struct that has a field `udpated_post` of type `Post`, and an `post_to_update` field of type `ActionHash`.
 
-9. Create a function `get_post`, that receives as input the original `HeaderHash` for a post, and returns the latest update for that post in the form of a `ExternResult<Element>`.
+9. Create a function `get_post`, that receives as input the original `ActionHash` for a post, and returns the latest update for that post in the form of a `ExternResult<Record>`.

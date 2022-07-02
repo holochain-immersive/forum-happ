@@ -5,7 +5,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import {
   AgentPubKey,
   AppWebsocket,
-  HeaderHash,
+  ActionHash,
   InstalledAppInfo,
 } from '@holochain/client';
 import { contextProvider } from '@lit-labs/context';
@@ -41,7 +41,7 @@ export class HolochainApp extends LitElement {
   currentView:
     | { view: 'main'; selectedChannel: string }
     | { view: 'creatingPost' }
-    | { view: 'updatingPost'; headerHash: HeaderHash } = {
+    | { view: 'updatingPost'; headerHash: ActionHash } = {
     view: 'main',
     selectedChannel: 'general',
   };

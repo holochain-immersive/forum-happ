@@ -1,5 +1,5 @@
-import { Element } from "@holochain-open-dev/core-types";
-import { DnaSource, HeaderHash } from "@holochain/client";
+import { Element as Record } from "@holochain-open-dev/core-types";
+import { DnaSource, HeaderHash as ActionHash } from "@holochain/client";
 import { pause, runScenario, Scenario } from "@holochain/tryorama";
 import _ from "lodash";
 import test from "tape-promise/tape.js";
@@ -174,7 +174,7 @@ if (!isExercise || stepNum >= 5) {
         // conductor of the scenario.
         await scenario.shareAllAgents();
 
-        let generalPosts: Array<HeaderHash> = await bob.cells[0].callZome({
+        let generalPosts: Array<ActionHash> = await bob.cells[0].callZome({
           zome_name: "posts",
           fn_name: "get_channel_posts",
           payload: "general",
@@ -309,7 +309,7 @@ if (!isExercise || stepNum >= 8) {
         // Wait for the created entry to be propagated to the other node.
         await pause(100);
 
-        let updatedPostHash: HeaderHash = await alice.cells[0].callZome({
+        let updatedPostHash: ActionHash = await alice.cells[0].callZome({
           zome_name: "posts",
           fn_name: "update_post",
           payload: {
@@ -369,14 +369,14 @@ if (!isExercise || stepNum >= 8) {
         // Wait for the created entry to be propagated to the other node.
         await pause(100);
 
-        let updatedPost: Element = await alice.cells[0].callZome({
+        let updatedPost: Record = await alice.cells[0].callZome({
           zome_name: "posts",
           fn_name: "get_post",
           payload: postHash,
         });
 
         t.ok(
-          _.isEqual(extractHeaderHash(updatedPost), updatedPostHash),
+          _.isEqual(extractActionHash(updatedPost), updatedPostHash),
           "update_post should update the original post, and get_post should return the latest version of the post"
         );
       });
@@ -387,6 +387,6 @@ if (!isExercise || stepNum >= 8) {
   });
 }
 
-export function extractHeaderHash(element: Element): HeaderHash {
-  return (element as any).signed_header.hashed.hash;
+export function extractActionHash(record: Record): ActionHash {
+  return (record as any).signed_action.hashed.hash;
 }

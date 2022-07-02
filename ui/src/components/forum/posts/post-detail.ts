@@ -6,11 +6,11 @@ import '@type-craft/title/title-detail';
 import '@holochain-open-dev/utils/holo-identicon';
 import '@type-craft/content/content-detail';
 import { contextProvided } from '@lit-labs/context';
-import { Element } from '@holochain-open-dev/core-types';
+import { Record } from '@holochain-open-dev/core-types';
 import {
   AgentPubKey,
   AppWebsocket,
-  HeaderHash,
+  ActionHash,
   InstalledAppInfo,
   InstalledCell,
 } from '@holochain/client';
@@ -20,15 +20,15 @@ import '../profiles/agent-nickname';
 import '../comments/comments-on-post';
 
 import { appInfoContext, appWebsocketContext } from '../../../contexts';
-import { extractEntry, extractHeader, extractHeaderHash } from '../../../utils';
+import { extractEntry, extractAction, extractActionHash } from '../../../utils';
 
 @customElement('post-detail')
 export class PostDetail extends LitElement {
   @property({ type: Object })
-  postHash!: HeaderHash;
+  postHash!: ActionHash;
 
   @state()
-  _post!: Element | undefined;
+  _post!: Record | undefined;
 
   @contextProvided({ context: appWebsocketContext })
   appWebsocket!: AppWebsocket;
@@ -79,7 +79,7 @@ export class PostDetail extends LitElement {
           >${extractEntry(this._post).content}</span
         >
 
-        ${isEqual(extractHeader(this._post).author, this.myPubKey)
+        ${isEqual(extractAction(this._post).author, this.myPubKey)
           ? html`<mwc-icon-button
               icon="edit"
               style="position: absolute; right: -16px; top: -16px"
@@ -89,7 +89,7 @@ export class PostDetail extends LitElement {
                     bubbles: true,
                     composed: true,
                     detail: {
-                      headerHash: extractHeaderHash(this._post!),
+                      headerHash: extractActionHash(this._post!),
                     },
                   })
                 )}
@@ -102,16 +102,16 @@ export class PostDetail extends LitElement {
           Created by
           <holo-identicon
             style="margin: 0 8px"
-            .hash=${extractHeader(this._post).author}
+            .hash=${extractAction(this._post).author}
             size="24"
           ></holo-identicon>
           <agent-nickname
-            .agentPubKey=${extractHeader(this._post).author}
+            .agentPubKey=${extractAction(this._post).author}
           ></agent-nickname
           >,
           <sl-relative-time
             style="margin-left: 4px;"
-            .date=${new Date(extractHeader(this._post).timestamp / 1000)}
+            .date=${new Date(extractAction(this._post).timestamp / 1000)}
           ></sl-relative-time>
         </div>
       </div>

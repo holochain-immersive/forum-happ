@@ -1,4 +1,4 @@
-import { DnaSource, HeaderHash } from "@holochain/client";
+import { DnaSource, HeaderHash as ActionHash } from "@holochain/client";
 import { pause, runScenario, Scenario } from "@holochain/tryorama";
 import test from "tape-promise/tape.js";
 import { forumDnaPath } from "./utils";

@@ -1,4 +1,4 @@
-import { DnaSource, HeaderHash } from "@holochain/client";
+import { DnaSource, HeaderHash as ActionHash } from "@holochain/client";
 import { pause, runScenario, Scenario } from "@holochain/tryorama";
 import { decode } from "@msgpack/msgpack";
 import test from "tape-promise/tape.js";
@@ -22,7 +22,7 @@ test("comments zome: create and retrieve comments", async (t) => {
       // conductor of the scenario.
       await scenario.shareAllAgents();
 
-      const postHash: HeaderHash = await alice.cells[0].callZome({
+      const postHash: ActionHash = await alice.cells[0].callZome({
         zome_name: "posts",
         fn_name: "create_post",
         payload: {

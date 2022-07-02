@@ -4,7 +4,7 @@ import {
   InstalledCell,
   AppWebsocket,
   InstalledAppInfo,
-  HeaderHash,
+  ActionHash,
 } from '@holochain/client';
 import { contextProvided } from '@lit-labs/context';
 import '@material/mwc-button';
@@ -17,12 +17,12 @@ import '@type-craft/content/create-content';
 import { Element } from '@holochain-open-dev/core-types';
 
 import { appWebsocketContext, appInfoContext } from '../../../contexts';
-import { extractEntry, extractHeaderHash } from '../../../utils';
+import { extractEntry, extractActionHash } from '../../../utils';
 
 @customElement('edit-post')
 export class EditPost extends LitElement {
   @property({ type: Object })
-  postHash!: HeaderHash;
+  postHash!: ActionHash;
 
   @contextProvided({ context: appWebsocketContext })
   appWebsocket!: AppWebsocket;
@@ -83,7 +83,7 @@ export class EditPost extends LitElement {
       zome_name: 'posts',
       fn_name: 'update_post',
       payload: {
-        post_to_update: extractHeaderHash(this._post!),
+        post_to_update: extractActionHash(this._post!),
         updated_post: {
           title: this._title,
           content: this._content,

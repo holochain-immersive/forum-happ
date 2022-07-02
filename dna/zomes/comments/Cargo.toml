@@ -11,5 +11,5 @@ name = "comments"
 serde = "1"
 derive_more = "0"
 
-hdk = {version="0.0.130", features = ["encoding"]}
+hdk = {version = "0.0.140"}
 comments_zome = {path = "../../../zomes/comments"}

@@ -8,13 +8,14 @@ crate-type = ["cdylib", "rlib"]
 name = "comments_zome"
 
 [dependencies]
-serde = "1"
 derive_more = "0"
+serde = "1"
 
-hdk = {version="0.0.130", features = ["encoding"]}
+hdk = {version = "0.0.140"}
 
 [features]
 exercisestep = []
+
 exercise2step1 = []
 exercise2step2 = ["exercise2step1"]
 exercise2step3 = ["exercise2step2"]

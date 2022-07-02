@@ -1,22 +1,37 @@
 use hdk::prelude::*;
 
-#[hdk_entry(id = "profile")]
+#[hdk_link_types]
+pub enum LinkTypes {
+    AgentToProfile,
+}
+
+#[hdk_entry_helper]
 pub struct Profile {
     pub nickname: String,
 }
 
+#[hdk_entry_defs]
+#[unit_enum(UnitTypes)]
 #[cfg(not(feature = "exercise1step1"))]
-entry_defs![Profile::entry_def()];
+pub enum EntryTypes {
+    #[entry_def(name = "profile")]
+    Profile(Profile),
+}
 
 // Create the given profile and associates it with our public key
 #[hdk_extern]
 #[cfg(not(feature = "exercise1step2"))]
 pub fn create_profile(profile: Profile) -> ExternResult<()> {
-    let header_hash = create_entry(&profile)?;
+    let action_hash = create_entry(EntryTypes::Profile(profile))?;
 
     let my_pub_key = agent_info()?.agent_initial_pubkey;
 
-    create_link(my_pub_key.into(), header_hash.into(), HdkLinkType::Any, ())?;
+    create_link(
+        my_pub_key,
+        action_hash,
+        LinkTypes::AgentToProfile,
+        (),
+    )?;
 
     Ok(())
 }
@@ -28,15 +43,19 @@ pub fn get_agent_profile(agent_pub_key: AgentPubKey) -> ExternResult<Option<Prof
     inner_get_agent_profile(agent_pub_key)
 }
 
-fn get_profile(header_hash: HeaderHash) -> ExternResult<Option<Profile>> {
-    let maybe_element = get(header_hash, GetOptions::default())?;
+fn get_profile(action_hash: ActionHash) -> ExternResult<Option<Profile>> {
+    let maybe_element = get(action_hash, GetOptions::default())?;
 
     match maybe_element {
         None => Ok(None),
         Some(element) => {
-            let profile: Profile = element.entry().to_app_option()?.ok_or(WasmError::Guest(
-                "Could not deserialize element to Profile.".into(),
-            ))?;
+            let profile: Profile = element
+                .entry()
+                .to_app_option()
+                .map_err(|e| wasm_error!(e.into()))?
+                .ok_or(wasm_error!(WasmErrorInner::Guest(
+                    "Could not deserialize element to Profile.".into(),
+                )))?;
 
             Ok(Some(profile))
         }
@@ -53,7 +72,7 @@ pub fn get_my_profile(_: ()) -> ExternResult<Option<Profile>> {
 }
 
 fn inner_get_agent_profile(agent_pub_key: AgentPubKey) -> ExternResult<Option<Profile>> {
-    let links = get_links(agent_pub_key.into(), None)?;
+    let links = get_links(agent_pub_key, LinkTypes::AgentToProfile, None)?;
 
     match links.first() {
         Some(link) => get_profile(link.target.clone().into()),

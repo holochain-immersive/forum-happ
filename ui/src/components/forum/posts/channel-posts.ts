@@ -4,7 +4,7 @@ import {
   InstalledCell,
   AppWebsocket,
   InstalledAppInfo,
-  HeaderHash,
+  ActionHash,
 } from '@holochain/client';
 import { contextProvided } from '@lit-labs/context';
 import { appInfoContext, appWebsocketContext } from '../../../contexts';
@@ -19,7 +19,7 @@ export class ChannelPosts extends LitElement {
   channel!: string;
 
   @state()
-  _channelPosts: Array<HeaderHash> | undefined;
+  _channelPosts: Array<ActionHash> | undefined;
 
   @contextProvided({ context: appWebsocketContext })
   appWebsocket!: AppWebsocket;
