@@ -1,7 +1,5 @@
 use hdk::prelude::*;
 
-
-
 /**
  * DON'T TOUCH
  */

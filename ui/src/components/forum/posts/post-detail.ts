@@ -6,9 +6,9 @@ import '@type-craft/title/title-detail';
 import '@holochain-open-dev/utils/holo-identicon';
 import '@type-craft/content/content-detail';
 import { contextProvided } from '@lit-labs/context';
-import { Record } from '@holochain-open-dev/core-types';
 import {
   AgentPubKey,
+  Record,
   AppWebsocket,
   ActionHash,
   InstalledAppInfo,

@@ -6,8 +6,8 @@ import {
   InstalledAppInfo,
   ActionHash,
   AgentPubKey,
+  Record,
 } from '@holochain/client';
-import { Element } from '@holochain-open-dev/core-types';
 import { contextProvided } from '@lit-labs/context';
 import { TextField } from '@material/mwc-textfield';
 import isEqual from 'lodash-es/isEqual';
@@ -94,9 +94,7 @@ export class CommentsOnPost extends LitElement {
       <div
         style="display:flex; flex: 1; flex-direction: row; margin-bottom: 16px;"
       >
-        <holo-identicon
-          .hash=${extractAction(comment).author}
-        ></holo-identicon>
+        <holo-identicon .hash=${extractAction(comment).author}></holo-identicon>
         <div
           style="display:flex; flex: 1; flex-direction: column;  align-items: start; margin-left: 16px;"
         >
@@ -112,8 +110,7 @@ export class CommentsOnPost extends LitElement {
           ? html`
               <mwc-icon-button
                 icon="delete"
-                @click=${() =>
-                  this.deleteComment(extractActionHash(comment))}
+                @click=${() => this.deleteComment(extractActionHash(comment))}
               ></mwc-icon-button>
             `
           : html``}

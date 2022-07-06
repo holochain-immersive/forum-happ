@@ -8,7 +8,44 @@ import { forumDnaPath } from "./utils";
 const isExercise = process.env["EXERCISE"] === "3";
 const stepNum = isExercise && parseInt(process.env["STEP"] as string);
 
-if (isExercise && stepNum <= 2) {
+if (isExercise && stepNum === 1) {
+  test("posts zome: profile is in entry defs", async (t) => {
+    try {
+      await runScenario(async (scenario: Scenario) => {
+        // Construct proper paths for your DNAs.
+        // This assumes DNA files created by the `hc dna pack` command.
+
+        // Set up the array of DNAs to be installed, which only consists of the
+        // test DNA referenced by path.
+        const dnas: DnaSource[] = [{ path: forumDnaPath }];
+
+        // Add 2 players with the test DNA to the Scenario. The returned players
+        // can be destructured.
+        const [alice, bob] = await scenario.addPlayersWithHapps([dnas, dnas]);
+
+        // Shortcut peer discovery through gossip and register all agents in every
+        // conductor of the scenario.
+        await scenario.shareAllAgents();
+
+        let entryDefs: any = await alice.cells[0].callZome({
+          zome_name: "posts",
+          fn_name: "entry_defs",
+          payload: null,
+        });
+
+        t.equal(
+          entryDefs.Defs.length,
+          1,
+          "entry_defs should have 1 entry def defined"
+        );
+      });
+    } catch (e) {
+      console.log(e);
+      process.kill(process.pid, "SIGINT");
+    }
+  });
+}
+if (isExercise && stepNum === 2) {
   test("posts zome: create_post", async (t) => {
     try {
       await runScenario(async (scenario: Scenario) => {
@@ -51,7 +88,7 @@ if (isExercise && stepNum <= 2) {
 }
 
 if (isExercise && stepNum === 3) {
-  test("posts zome: path is in entry defs", async (t) => {
+  test("posts zome: create_post", async (t) => {
     try {
       await runScenario(async (scenario: Scenario) => {
         // Construct proper paths for your DNAs.
@@ -69,20 +106,21 @@ if (isExercise && stepNum === 3) {
         // conductor of the scenario.
         await scenario.shareAllAgents();
 
-        let entryDefs: any = await alice.cells[0].callZome({
+        let postHash = await alice.cells[0].callZome({
           zome_name: "posts",
-          fn_name: "entry_defs",
-          payload: null,
+          fn_name: "create_post",
+          payload: {
+            post: {
+              title: "This is my first post",
+              content: "And I intend to make it good!",
+            },
+            channel: "general",
+          },
         });
 
-        t.equal(
-          entryDefs.Defs.length,
-          2,
-          "entry_defs should have 2 entry defs defined"
-        );
         t.ok(
-          entryDefs.Defs.find((e) => e.id.App === "hdk.path_entry"),
-          "entry_defs should have the PathEntry entry definition defined"
+          postHash,
+          "create_post should return the header hash of the created post"
         );
       });
     } catch (e) {
@@ -335,7 +373,8 @@ if (!isExercise || stepNum >= 8) {
           payload: {
             updated_post: {
               title: "This is an update to the first post 2",
-              content: "I reconsidered the first content... That was wrong for the second time.",
+              content:
+                "I reconsidered the first content... That was wrong for the second time.",
             },
             post_to_update: updatedPostHash,
           },
@@ -355,7 +394,8 @@ if (!isExercise || stepNum >= 8) {
           payload: {
             updated_post: {
               title: "This is an update to the first post 3 ",
-              content: "I reconsidered the first content... That was wrong for the third time",
+              content:
+                "I reconsidered the first content... That was wrong for the third time",
             },
             post_to_update: updatedPostHash,
           },

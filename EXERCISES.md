@@ -9,13 +9,22 @@ These are the instructions for the first step, amenable to all the other steps:
 - This is the error message you should see:
 
 ```
-{
-  type: 'error',
-  data: {
-    type: 'ribosome_error',
-    data: `Wasm error while working with Ribosome: Host("An error with entry defs in zome 'profiles': entry def not found for App(\\"profile\\")")`
-  }
-}
+# profiles zome: create profile and retrieve it
+not ok 1 Error: There are no entries defined in the profiles zome
+  ---
+    operator: error
+    at: bound (/home/guillem/projects/immersive/forum-happ/node_modules/tape-promise/node_modules/onetime/index.js:30:12)
+    stack: |-
+      Error: There are no entries defined in the profiles zome
+          at file:///home/guillem/projects/immersive/forum-happ/tests/src/profile.ts:35:13
+          at processTicksAndRejections (node:internal/process/task_queues:96:5)
+          at async runScenario (file:///home/guillem/projects/immersive/forum-happ/node_modules/@holochain/tryorama/ts/src/local/scenario.ts:202:5)
+  ...
+
+1..1
+# tests 1
+# pass  0
+# fail  1
 ```
 
 2. Implement the missing function that that step requires.
@@ -40,14 +49,21 @@ Solve the next steps in the `profiles` zome, in `dna/zomes/profiles/lib.rs`.
 
 1. Add a `Profile` struct, with only a `nickname` field of type `String`.
 
-- Annotate this struct with `#[hdk_entry]` to declare it as a Holochain entry.
-- Add the `Profile` entry type to the `entry_defs![]` for the zome.
+- Annotate this struct with `#[hdk_entry_helper]` to declare it as a Holochain entry.
+- Define an `EntryTypes` enum, with only one variant named `Profile` that has the `Profile` struct as its payload.
+- Annotate this enum with `#[hdk_entry_defs]` and `#[unit_enum(UnitTypes)]` to declare the entry types for this zome.
 
-2. Create a function `create_profile` that receives a `Profile` struct, and returns the `()` unit type.
+2. Create a function `create_profile` that receives a `Profile` struct, creates the `Profile` entry, and returns the `ActionHash` for the action that was just created.
 
-3. Create a function `get_agent_profile` that receives the public key for the agent we are looking the profile for, and returns the profile in an `Option<Profile>`.
+3. Create a link from the author's public key to the profile after the profile is created:
 
-4. Create a function `get_my_profile` that doesn't receive any input parameters, and returns an `Option<Profile>` with out own profile if we have created it.
+- Define a `LinkTypes` enum with only one unit variant: `AgentToProfile`.
+- Annotate this enum with `#[hdk_link_types]` to declare the link types for this zome.
+- Modify the `create_profile` function: after the profile is created, create a link from the public key of the agent calling the function to the profile action hash, with `LinkTypes::AgentToProfile` as the link type.
+
+4. Create a function `get_agent_profile` that receives the public key for the agent we are looking the profile for, and returns the profile in an `Option<Profile>`.
+
+5. Create a function `get_my_profile` that doesn't receive any input parameters, and returns an `Option<Profile>` with our own profile if we have created it.
 
 ## Exercise 2: Comments zome
 
@@ -61,8 +77,8 @@ Solve the next steps in the `comments` zome, in `dna/zomes/comments/lib.rs`.
 
 1. Add a `Comment` struct, with only a `comment` field of type `String`.
 
-- Annotate this struct with `#[hdk_entry]` to declare it as a Holochain entry.
-- Add the `Comment` entry type to the `entry_defs![]` for the zome.
+- Annotate this struct with `#[hdk_entry_helper]` to declare it as a Holochain entry.
+- Define the entry types enum and add the `Comment` entry type to to it.
 
 2. Create a function `create_comment` that receives a `CreateCommentInput` struct, creates the comment and returns the `ActionHash` of the created comment.
 
@@ -70,9 +86,13 @@ Solve the next steps in the `comments` zome, in `dna/zomes/comments/lib.rs`.
   - `comment_on`, of type `ActionHash`. This refers the post that is being commented on.
   - `comment`, of type String, the actual comment.
 
-3. Create a function `get_comments_on` that receives a `ActionHash` for a post and returns all the comments that have been created for that post, in the form of a `Vec<Record>`.
+3. Define the link types enum for the zome with only one variant `CommentedOnToComment`.
+   
+- In the `create_comment` function, after the comment is created, create a link from the `comment_on` hash to the `comment` hash.
 
-4. Create a function `delete_comment` that receives the `ActionHash` of the comment that is to be deleted, and deletes that comment.
+4. Create a function `get_comments_on` that receives a `ActionHash` for a post and returns all the comments that have been created for that post, in the form of a `Vec<Record>`.
+
+5. Create a function `delete_comment` that receives the `ActionHash` of the comment that is to be deleted, and deletes that comment.
 
 
 ## Exercise 3: Posts zome
@@ -89,17 +109,24 @@ Solve the next steps in the `posts` zome, in `dna/zomes/posts/lib.rs`.
 
 1. Add a `Post` struct, with two fields: a `title` field of type `String`, and a `content` field of type `String`.
 
-- Annotate this struct with `#[hdk_entry]` to declare it as a Holochain entry.
-- Add the `Post` entry type to the `entry_defs![]` for the zome.
+- Annotate this struct with `#[hdk_entry_helper]` to declare it as a Holochain entry.
+- Define the entry types enum and add the `Post` entry type to to it.
 
 2. Create a function `create_post` that receives a `CreatePostInput` struct, creates the post and returns the `ActionHash` of the created post. Define the `CreatePostInput` as a struct that has a field `post` of type `Post`.
 
-3. Add the `PathEntry` entry definition to the array of entry definitions.
+3. Add a `channel` field of type `String` in the `CreatePostInput` struct.
 
-4. Add a `channel` field of type `String` in the `CreatePostInput` struct, and change the function `create_post` so that a path gets created for the given channel name. The path has to be of the form `all_posts.<CHANNEL_NAME>`. 
+4. Create the given channel:
+
+- Define the link types enum with only one variant: `PathToChannel`.
+- After the post gets created, build a path of the form `all_posts.<CHANNEL_NAME>`. 
   - Eg. if the given channel is `nature`, the path should be `all_posts.nature`.
+- Add the `PathToChannel` link type to the path to turn it into a `TypedPath`-
+- Call `.ensure()` with the typed path so that a path gets created for the given channel name. The path has to be of the form . 
 
 5. Change the function `create_post` so that after the channel path gets created, it also creates a link from the entry hash of that channel path to the header hash of the created post.
+
+- You'll need to add a new link type variant: `ChannelToPost`.
 
 6. Create a function `get_channel_posts` that receives a channel `String`, and returns a `Vec<ActionHash>` for all the posts that have been created in this in the given channel. The header hashes should be ordered by the time that they were created in descendant order (most recent ones first).
 

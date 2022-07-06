@@ -3,6 +3,9 @@ import { pause, runScenario, Scenario } from "@holochain/tryorama";
 import test from "tape-promise/tape.js";
 import { forumDnaPath } from "./utils";
 
+const isExercise = process.env["EXERCISE"] === "1";
+const stepNum = isExercise && parseInt(process.env["STEP"] as string);
+
 test("profiles zome: create profile and retrieve it", async (t) => {
   try {
     await runScenario(async (scenario: Scenario) => {
@@ -21,6 +24,19 @@ test("profiles zome: create profile and retrieve it", async (t) => {
       // conductor of the scenario.
       await scenario.shareAllAgents();
 
+      try {
+        let entryDefs: any = await bob.cells[0].callZome({
+          zome_name: "profiles",
+          fn_name: "entry_defs",
+          payload: null,
+        });
+        t.equal(entryDefs.Defs.length, 1, "should have one entry definition");
+      } catch (e) {
+        throw new Error("There are no entries defined in the profiles zome");
+      }
+
+      if (isExercise && stepNum === 1) return;
+
       let profile: any = await bob.cells[0].callZome({
         zome_name: "profiles",
         fn_name: "get_agent_profile",
@@ -30,13 +46,19 @@ test("profiles zome: create profile and retrieve it", async (t) => {
 
       // The cells of the installed hApp are returned in the same order as the DNAs
       // that were passed into the player creation.
-      await alice.cells[0].callZome({
+      const profileActionHash = await alice.cells[0].callZome({
         zome_name: "profiles",
         fn_name: "create_profile",
         payload: {
           nickname: "Alice",
         },
       });
+      t.ok(
+        profileActionHash,
+        "create_profile should return the action hash for the create action"
+      );
+
+      if (isExercise && stepNum === 2) return;
 
       // Wait for the created entry to be propagated to the other node.
       await pause(100);

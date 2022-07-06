@@ -4,6 +4,9 @@ import { decode } from "@msgpack/msgpack";
 import test from "tape-promise/tape.js";
 import { forumDnaPath } from "./utils";
 
+const isExercise = process.env["EXERCISE"] === "2";
+const stepNum = isExercise && parseInt(process.env["STEP"] as string);
+
 test("comments zome: create and retrieve comments", async (t) => {
   try {
     await runScenario(async (scenario: Scenario) => {
@@ -37,7 +40,7 @@ test("comments zome: create and retrieve comments", async (t) => {
       // Wait for the created entry to be propagated to the other node.
       await pause(100);
 
-      if (!(process.env["EXERCISE"] === "2" && process.env["STEP"] === "2")) {
+      if (!(isExercise && stepNum === 2)) {
         let emptyComments: Array<any> = await bob.cells[0].callZome({
           zome_name: "comments",
           fn_name: "get_comments_on",
@@ -63,8 +66,10 @@ test("comments zome: create and retrieve comments", async (t) => {
         "create_comment should return the header hash of the created comment"
       );
 
+      if (isExercise && stepNum === 2) return;
+
       // Wait for the created entry to be propagated to the other node.
-      await pause(100);
+      await pause(200);
 
       let comments: Array<any> = await bob.cells[0].callZome({
         zome_name: "comments",

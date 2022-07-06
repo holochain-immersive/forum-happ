@@ -12,4 +12,28 @@ derive_more = "0"
 serde = "1"
 
 hdk = {version = "0.0.140"}
-profiles_zome = {path = "../../../zomes/profiles"}
+profiles_zome = {git = "https://github.com/holochain-immersive/zomes", package = "profiles_zome", branch = "main"}
+
+[features]
+exercisestep = ["profiles_zome/exercisestep"]
+
+exercise1step1 = ["profiles_zome/exercise1step1"]
+exercise1step2 = ["exercise1step1", "profiles_zome/exercise1step2"]
+exercise1step3 = ["exercise1step2", "profiles_zome/exercise1step3"]
+exercise1step4 = ["exercise1step3", "profiles_zome/exercise1step4"]
+exercise1step5 = ["exercise1step4", "profiles_zome/exercise1step5"]
+
+exercise2step1 = ["exercise1step5", "profiles_zome/exercise1step5"]
+exercise2step2 = ["exercise1step5", "profiles_zome/exercise1step5"]
+exercise2step3 = ["exercise1step5", "profiles_zome/exercise1step5"]
+exercise2step4 = ["exercise1step5", "profiles_zome/exercise1step5"]
+
+exercise3step1 = ["exercise1step5", "profiles_zome/exercise1step5"]
+exercise3step2 = ["exercise1step5", "profiles_zome/exercise1step5"]
+exercise3step3 = ["exercise1step5", "profiles_zome/exercise1step5"]
+exercise3step4 = ["exercise1step5", "profiles_zome/exercise1step5"]
+exercise3step5 = ["exercise1step5", "profiles_zome/exercise1step5"]
+exercise3step6 = ["exercise1step5", "profiles_zome/exercise1step5"]
+exercise3step7 = ["exercise1step5", "profiles_zome/exercise1step5"]
+exercise3step8 = ["exercise1step5", "profiles_zome/exercise1step5"]
+exercise3step9 = ["exercise1step5", "profiles_zome/exercise1step5"]

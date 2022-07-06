@@ -13,10 +13,9 @@
     "package": "npm run build && cd dist && bestzip ../dist.zip *"
   },
   "dependencies": {
-    "@holochain-open-dev/core-types": "^0.2.0",
-    "@holochain-open-dev/utils": "^0.0.12",
-    "@holochain/client": "0.4.1",
-    "@lit-labs/context": "^0.1.1",
+    "@holochain-open-dev/utils": "^0.1.0",
+    "@holochain/client": "^0.5.0",
+    "@lit-labs/context": "^0.1.2",
     "@material/mwc-button": "^0.26.1",
     "@material/mwc-circular-progress": "^0.26.1",
     "@material/mwc-drawer": "^0.26.1",

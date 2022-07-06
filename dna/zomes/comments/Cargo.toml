@@ -12,4 +12,24 @@ serde = "1"
 derive_more = "0"
 
 hdk = {version = "0.0.140"}
-comments_zome = {path = "../../../zomes/comments"}
+comments_zome = {git = "https://github.com/holochain-immersive/zomes", package = "comments_zome", branch = "main"}
+
+[features]
+exercisestep = ["comments_zome/exercisestep"]
+
+exercise2step1 = ["comments_zome/exercise2step1"]
+
+exercise2step2 = ["exercise2step1", "comments_zome/exercise2step2"]
+exercise2step3 = ["exercise2step2", "comments_zome/exercise2step3"]
+exercise2step4 = ["exercise2step3", "comments_zome/exercise2step4"]
+exercise2step5 = ["exercise2step4", "comments_zome/exercise2step5"]
+
+exercise3step1 = ["exercise2step5", "comments_zome/exercise2step5"]
+exercise3step2 = ["exercise2step5", "comments_zome/exercise2step5"]
+exercise3step3 = ["exercise2step5", "comments_zome/exercise2step5"]
+exercise3step4 = ["exercise2step5", "comments_zome/exercise2step5"]
+exercise3step5 = ["exercise2step5", "comments_zome/exercise2step5"]
+exercise3step6 = ["exercise2step5", "comments_zome/exercise2step5"]
+exercise3step7 = ["exercise2step5", "comments_zome/exercise2step5"]
+exercise3step8 = ["exercise2step5", "comments_zome/exercise2step5"]
+exercise3step9 = ["exercise2step5", "comments_zome/exercise2step5"]

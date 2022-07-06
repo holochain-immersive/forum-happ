@@ -4,6 +4,7 @@ import {
   InstalledCell,
   AppWebsocket,
   InstalledAppInfo,
+  Record,
   ActionHash,
 } from '@holochain/client';
 import { contextProvided } from '@lit-labs/context';
@@ -14,7 +15,6 @@ import { TextArea } from '@material/mwc-textarea';
 import { TextField } from '@material/mwc-textfield';
 import '@type-craft/title/create-title';
 import '@type-craft/content/create-content';
-import { Element } from '@holochain-open-dev/core-types';
 
 import { appWebsocketContext, appInfoContext } from '../../../contexts';
 import { extractEntry, extractActionHash } from '../../../utils';
@@ -35,7 +35,7 @@ export class EditPost extends LitElement {
   }
 
   @state()
-  _post!: Element | undefined;
+  _post!: Record | undefined;
 
   @state()
   _title!: string;
