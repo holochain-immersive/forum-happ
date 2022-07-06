@@ -1,8 +1,15 @@
 # forum
 
+This is a basic Holochain training, with step by step exercises and their tests.
+
+It consists of a forum hApp that has already been implemented, both its backend and a small UI. You can boot up the UI at first to see what are their functionalities.
+
 
 ## Your goals
 
+Your goal is to re-implement this forum happ, one step at a time.
+
+To do that, go into `EXERCISES.md` and follow its instructions. Have fun!
 
 ## Environment Setup
 
@@ -25,6 +32,16 @@ npm install
 This will install all the needed dependencies in your local environment, including `holochain`, `hc` and `npm`.
 
 Run all the other instructions in this README from inside this nix-shell, otherwise **they won't work**.
+
+## Starting an agent
+
+Start a forum agent with:
+
+```bash
+npm start
+```
+
+You should be able to see all the posts that other participants have created in this DHT.
 
 ## Bootstrapping a network
 
