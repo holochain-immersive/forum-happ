@@ -27,13 +27,13 @@ not ok 1 Error: There are no entries defined in the profiles zome
 # fail  1
 ```
 
-2. Implement the missing function that that step requires.
+2. Implement the missing function that that step requires (see step 1 in the "Exercise 1: Profiles zome" section of this document).
 3. Run the tests again, until **all tests** pass again.
 4. Move on to the next step, and run the new tests.
 
 - Eg. for the second step, you should run `EXERCISE=1 STEP=2 npm test`.
 
-5. When you are done with all the steps in an exercise, move to the next exercise:
+5. When you are done with all the steps in an exercise, move to the next exercise (see step 1 in the "Exercise 2: Comments zome" of this document):
 
 - Eg. for first step of the 2nd exercise, you should run `EXERCISE=2 STEP=1 npm test`.
 
