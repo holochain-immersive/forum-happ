@@ -1,5 +1,4 @@
-import { Element as Record } from "@holochain-open-dev/core-types";
-import { DnaSource, HeaderHash as ActionHash } from "@holochain/client";
+import { DnaSource, Record, ActionHash } from "@holochain/client";
 import { pause, runScenario, Scenario } from "@holochain/tryorama";
 import _ from "lodash";
 import test from "tape-promise/tape.js";
