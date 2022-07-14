@@ -36,11 +36,38 @@ fn create_profile(profile: Profile) -> ExternResult<ActionHash> {
 
 // #[hdk_extern]
 fn get_agent_profile(agent_pub_key: AgentPubKey) -> ExternResult<Option<Profile>> {
-  let profiles: Vec<Link> = get_links(
+  let agent_to_profile_links: Vec<Link> = get_links(
     agent_pub_key,
     LinkTypes::AgentToProfile,
     None,
   )?;
+
+
+  // let links: Vec<Link> = get_links(
+  //   author,  // Base hash 
+  //   LinkTypes::AuthorToComment,  // Link Type
+  //   None,  // Filter on link tag prefix
+  // )?;
+
+  let profile: Profile;
+
+  for link in agent_to_profile_links {
+    let maybe_record = get(ActionHash::from(link.target), GetOptions::default())?;
+    // match maybe_record {
+    //   Some => 
+    //   None => Ok(None)
+    // }
+    // if let Some(record) = maybe_record {
+    //   Some(record))
+    // }
+  }
+  // None
+
+  // for link in links {
+  //   println!("{:?}")
+  //   // let maybe_record = get(ActionHash::from(link.target))
+  // }
+  
   // let record = get(agent_pub_key, GetOptions::default())?;
   // let record_entry: &RecordEntry = record.unwrap().entry();
   // record_entry.
