@@ -27,6 +27,7 @@ exercise2step1 = ["exercise1step5", "profiles_zome/exercise1step5"]
 exercise2step2 = ["exercise1step5", "profiles_zome/exercise1step5"]
 exercise2step3 = ["exercise1step5", "profiles_zome/exercise1step5"]
 exercise2step4 = ["exercise1step5", "profiles_zome/exercise1step5"]
+exercise2step5 = ["exercise1step5", "profiles_zome/exercise1step5"]
 
 exercise3step1 = ["exercise1step5", "profiles_zome/exercise1step5"]
 exercise3step2 = ["exercise1step5", "profiles_zome/exercise1step5"]
