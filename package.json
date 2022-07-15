@@ -18,7 +18,7 @@
     "playground": "run-singleton \"holochain-playground\""
   },
   "devDependencies": {
-    "@holochain-playground/cli": "^0.0.10",
+    "@holochain-playground/cli": "^0.0.11",
     "@source-craft/fs": "^0.0.1",
     "@source-craft/rust": "^0.0.4",
     "concurrently": "^6.2.1",
