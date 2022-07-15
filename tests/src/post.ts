@@ -194,7 +194,7 @@ if (isExercise && stepNum === 4) {
   });
 }
 
-if (!isExercise || stepNum >= 5) {
+if (!isExercise || stepNum >= 6) {
   test("posts zome: create some posts and retrieve them", async (t) => {
     try {
       await runScenario(async (scenario: Scenario) => {
