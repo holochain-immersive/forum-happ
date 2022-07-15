@@ -40,7 +40,7 @@ test("comments zome: create and retrieve comments", async (t) => {
       // Wait for the created entry to be propagated to the other node.
       await pause(100);
 
-      if (!(isExercise && stepNum === 2)) {
+      if (!(isExercise && stepNum < 4)) {
         let emptyComments: Array<any> = await bob.cells[0].callZome({
           zome_name: "comments",
           fn_name: "get_comments_on",
@@ -66,7 +66,7 @@ test("comments zome: create and retrieve comments", async (t) => {
         "create_comment should return the action hash of the created comment"
       );
 
-      if (isExercise && stepNum === 2) return;
+      if (isExercise && stepNum < 4) return;
 
       // Wait for the created entry to be propagated to the other node.
       await pause(200);
