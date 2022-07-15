@@ -142,7 +142,7 @@ dependencies = [
 [[package]]
 name = "comments_zome"
 version = "0.0.1"
-source = "git+https://github.com/holochain-immersive/zomes?branch=main#f172b3eed4910fc161b9f13deb23ad2a36e34d63"
+source = "git+https://github.com/holochain-immersive/zomes?branch=main#2aad2bed8f99feccd8666ca983be0f00690c1004"
 dependencies = [
  "derive_more",
  "hdk",
@@ -935,7 +935,7 @@ dependencies = [
 [[package]]
 name = "posts_zome"
 version = "0.0.1"
-source = "git+https://github.com/holochain-immersive/zomes?branch=main#f172b3eed4910fc161b9f13deb23ad2a36e34d63"
+source = "git+https://github.com/holochain-immersive/zomes?branch=main#2aad2bed8f99feccd8666ca983be0f00690c1004"
 dependencies = [
  "derive_more",
  "hdk",
@@ -988,7 +988,7 @@ dependencies = [
 [[package]]
 name = "profiles_zome"
 version = "0.0.1"
-source = "git+https://github.com/holochain-immersive/zomes?branch=main#f172b3eed4910fc161b9f13deb23ad2a36e34d63"
+source = "git+https://github.com/holochain-immersive/zomes?branch=main#2aad2bed8f99feccd8666ca983be0f00690c1004"
 dependencies = [
  "derive_more",
  "hdk",
