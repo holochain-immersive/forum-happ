@@ -165,6 +165,8 @@ if (isExercise && stepNum === 4) {
           "create_post should return the header hash of the created post"
         );
 
+        if (isExercise && stepNum < 7) return;
+
         // Wait for the created entry to be propagated to the other node.
         await pause(100);
 
