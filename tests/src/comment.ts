@@ -63,7 +63,7 @@ test("comments zome: create and retrieve comments", async (t) => {
       });
       t.ok(
         commentHash,
-        "create_comment should return the header hash of the created comment"
+        "create_comment should return the action hash of the created comment"
       );
 
       if (isExercise && stepNum === 2) return;

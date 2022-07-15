@@ -89,7 +89,7 @@ export class PostDetail extends LitElement {
                     bubbles: true,
                     composed: true,
                     detail: {
-                      headerHash: extractActionHash(this._post!),
+                      actionHash: extractActionHash(this._post!),
                     },
                   })
                 )}

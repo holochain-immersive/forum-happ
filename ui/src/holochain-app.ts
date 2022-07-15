@@ -41,7 +41,7 @@ export class HolochainApp extends LitElement {
   currentView:
     | { view: 'main'; selectedChannel: string }
     | { view: 'creatingPost' }
-    | { view: 'updatingPost'; headerHash: ActionHash } = {
+    | { view: 'updatingPost'; actionHash: ActionHash } = {
     view: 'main',
     selectedChannel: 'general',
   };
@@ -96,7 +96,7 @@ export class HolochainApp extends LitElement {
 
     if (this.currentView.view === 'updatingPost')
       return html`<edit-post
-        .postHash=${this.currentView.headerHash}
+        .postHash=${this.currentView.actionHash}
         @post-updated=${() => {
           this.currentView = { view: 'main', selectedChannel: 'general' };
         }}
@@ -122,7 +122,7 @@ export class HolochainApp extends LitElement {
                 @updating-post=${(e: CustomEvent) => {
                   this.currentView = {
                     view: 'updatingPost',
-                    headerHash: e.detail.headerHash,
+                    actionHash: e.detail.actionHash,
                   };
                 }}
               ></channel-posts>

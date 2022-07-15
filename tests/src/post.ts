@@ -76,7 +76,7 @@ if (isExercise && stepNum === 2) {
 
         t.ok(
           postHash,
-          "create_post should return the header hash of the created post"
+          "create_post should return the action hash of the created post"
         );
       });
     } catch (e) {
@@ -119,7 +119,7 @@ if (isExercise && stepNum === 3) {
 
         t.ok(
           postHash,
-          "create_post should return the header hash of the created post"
+          "create_post should return the action hash of the created post"
         );
       });
     } catch (e) {
@@ -162,7 +162,7 @@ if (isExercise && stepNum === 4) {
 
         t.ok(
           postHash,
-          "create_post should return the header hash of the created post"
+          "create_post should return the action hash of the created post"
         );
 
         if (isExercise && stepNum < 7) return;
@@ -239,7 +239,7 @@ if (!isExercise || stepNum >= 5) {
 
         t.ok(
           postHash1,
-          "create_post should return the header hash of the created post"
+          "create_post should return the action hash of the created post"
         );
 
         // Wait for the created entry to be propagated to the other node.
@@ -259,7 +259,7 @@ if (!isExercise || stepNum >= 5) {
 
         t.ok(
           postHash2,
-          "create_post should return the header hash of the created post"
+          "create_post should return the action hash of the created post"
         );
 
         if (isExercise && stepNum < 7) return;
@@ -297,11 +297,11 @@ if (!isExercise || stepNum >= 5) {
         );
         t.ok(
           _.isEqual(generalPosts[0], postHash2),
-          "get_channel_posts should return the header hash of the created post"
+          "get_channel_posts should return the action hash of the created post"
         );
         t.ok(
           _.isEqual(generalPosts[1], postHash1),
-          "get_channel_posts should return the header hash of the created post"
+          "get_channel_posts should return the action hash of the created post"
         );
       });
     } catch (e) {
@@ -344,7 +344,7 @@ if (!isExercise || stepNum >= 8) {
 
         t.ok(
           postHash,
-          "create_post should return the header hash of the created post"
+          "create_post should return the action hash of the created post"
         );
 
         // Wait for the created entry to be propagated to the other node.
@@ -364,7 +364,7 @@ if (!isExercise || stepNum >= 8) {
 
         t.ok(
           updatedPostHash,
-          "update_post should return the header hash of the updated post"
+          "update_post should return the action hash of the updated post"
         );
 
         // Wait for the created entry to be propagated to the other node.
@@ -385,7 +385,7 @@ if (!isExercise || stepNum >= 8) {
 
         t.ok(
           updatedPostHash,
-          "update_post should return the header hash of the updated post"
+          "update_post should return the action hash of the updated post"
         );
 
         // Wait for the created entry to be propagated to the other node.
@@ -406,7 +406,7 @@ if (!isExercise || stepNum >= 8) {
 
         t.ok(
           updatedPostHash,
-          "update_post should return the header hash of the updated post"
+          "update_post should return the action hash of the updated post"
         );
 
         // Wait for the created entry to be propagated to the other node.
