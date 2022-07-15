@@ -43,16 +43,10 @@ fn get_agent_profile(agent_pub_key: AgentPubKey) -> ExternResult<Option<Profile>
         Some(link) => {
             let record = get(ActionHash::from(link.clone().target), GetOptions::default())?.unwrap();
             let record_entry = record.entry().clone();
-            let entry = match record_entry {
-                RecordEntry::Present(entry) => Ok(entry),
+            let profile = match record_entry {
+                RecordEntry::Present(Entry::App(bytes)) => Profile::try_from(bytes.0).map_err(|err| wasm_error!(err.into())),
                 _ => Err(wasm_error!(WasmErrorInner::Guest(format!("error"))))
             }?;
-
-            let profile = match entry {
-                Entry::App(bytes) => Profile::try_from(bytes.0).map_err(|err| wasm_error!(err.into())),
-                _ => Err(wasm_error!(WasmErrorInner::Guest(format!("error"))))
-            }?;
-
             Ok(Some(profile))
         },
         _ => Ok(None)
