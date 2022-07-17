@@ -23,21 +23,24 @@ fn create_profile(profile: Profile) -> ExternResult<ActionHash> {
     // get public key from agent
     let my_pub_key: AgentPubKey = agent_info()?.agent_initial_pubkey;
 
-    let create_link_action_hash =
-        create_link(
-            my_pub_key, 
-            action_hash,
-            LinkTypes::AgentToProfile,
-            ()
-        )?;
+    create_link(
+        my_pub_key, 
+        action_hash.clone(),
+        LinkTypes::AgentToProfile,
+        ()
+    )?;
 
-    Ok(create_link_action_hash)
+    Ok(action_hash)
 }
 
 #[hdk_extern]
 fn get_agent_profile(agent_pub_key: AgentPubKey) -> ExternResult<Option<Profile>> {
     let agent_to_profile_links: Vec<Link> =
         get_links(agent_pub_key, LinkTypes::AgentToProfile, None)?;
+
+    if agent_to_profile_links.len() <= 0 {
+        return Ok(None);
+    }
 
     match agent_to_profile_links.get(0) {
         Some(link) => {
@@ -51,48 +54,25 @@ fn get_agent_profile(agent_pub_key: AgentPubKey) -> ExternResult<Option<Profile>
         },
         _ => Ok(None)
     }
+
+    // let link = &agent_to_profile_links[0];
+    // let holo_hash = link.clone().target;
+    // let action_hash = ActionHash::from(holo_hash);
+    // let record = get(action_hash, GetOptions::default())?;
+    // let record_entry = record.entry().clone();
+    
+    // let profile = match record_entry {
+
+    // }
+    // Ok(None)
+
 }
-
-    // https://docs.rs/hdk/latest/hdk/prelude/enum.RecordEntry.html
-    // => to_app_option
-
-    // for link in agent_to_profile_links {
-    //   // let maybe_record = get(ActionHash::from(link.target), GetOptions::default())?;
-    //   // match maybe_record {
-    //   //   Some =>
-    //   //   None => Ok(None)
-    //   // }
-    //   // if let Some(record) = maybe_record {
-    //   //   Some(record))
-    //   // }
-    // }
-    // None
-
-    // for link in links {
-    //   println!("{:?}")
-    //   // let maybe_record = get(ActionHash::from(link.target))
-    // }
-
-    // let record = get(agent_pub_key, GetOptions::default())?;
-    // let record_entry: &RecordEntry = record.unwrap().entry();
-    // record_entry.
-    // match record_entry {
-    //   RecordEntry::Present(entry) => {
-    //     let app: AppEntryBytes = match entry {
-
-    //     }
-    //   }
-    //   _ => Err(wasm_error!(WasmErrorInner::Guest(String::from("Error trying to get the details of this action"))))
-    // }
-    // Err(wasm_error!(WasmErrorInner::Guest(String::from("Error trying to get the details of this action"))))
-
-    // println!("{:?}", record_entry);
-
-    // match record {
-    //   Some => Ok(record),
-    //   _ => Err(wasm_error!(WasmErrorInner::Guest(String::from("Error trying to get the details of this action"))))
-    // }
-
+// fn get_record_from_link(link: Link) -> Option<RecordEntry> {
+//     let holo_hash = link.clone().target;
+//     let action_hash = ActionHash::from(holo_hash);
+//     let result = get(action_hash, GetOptions::default())?;
+//     // let record_entry = record.entry().clone();
+// }
 
 // #[hdk_extern]
 // fn get_my_profile(public_key: AgentPubKey) -> ExternResult<Option<Profile>> {
