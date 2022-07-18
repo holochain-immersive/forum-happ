@@ -296,11 +296,11 @@ if (!isExercise || stepNum >= 6) {
           "get_channel_posts should return the appropriate amount of posts"
         );
         t.ok(
-          _.isEqual(generalPosts[0], postHash2),
+          generalPosts.find((postHash) => _.isEqual(postHash, postHash2)),
           "get_channel_posts should return the action hash of the created post"
         );
         t.ok(
-          _.isEqual(generalPosts[1], postHash1),
+          generalPosts.find((postHash) => _.isEqual(postHash, postHash1)),
           "get_channel_posts should return the action hash of the created post"
         );
       });
