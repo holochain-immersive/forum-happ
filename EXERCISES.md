@@ -128,7 +128,7 @@ Solve the next steps in the `posts` zome, in `dna/zomes/posts/lib.rs`.
 
 - You'll need to add a new link type variant: `ChannelToPost`.
 
-6. Create a function `get_channel_posts` that receives a channel `String`, and returns a `Vec<ActionHash>` for all the posts that have been created in this in the given channel. The action hashes should be ordered by the time that they were created in descendant order (most recent ones first).
+6. Create a function `get_channel_posts` that receives a channel `String`, and returns a `Vec<ActionHash>` for all the posts that have been created in the given channel. The action hashes should be ordered by the time that they were created in descendant order (most recent ones first).
 
 7. Create a function `get_all_channels` that doesn't receive any input parameter, and returns a `Vec<String>` with the names of all the channels that have been created.
 
