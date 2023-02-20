@@ -4,14 +4,13 @@ name: forum
 description: ~
 roles:
 
-  - id: forum
+  - name: forum
     provisioning:
       strategy: create
       deferred: false
     dna:
       bundled: "./forum.dna"
       properties: ~
-      uuid: ~
       version: ~
       clone_limit: 0
 

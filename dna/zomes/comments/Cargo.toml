@@ -11,8 +11,8 @@ name = "comments"
 serde = "1"
 derive_more = "0"
 
-hdk = {version = "0.0.140"}
-comments_zome = {git = "https://github.com/holochain-immersive/zomes", package = "comments_zome", branch = "main"}
+hdk = { workspace = true }
+comments_zome = { git = "https://github.com/holochain-immersive/zomes", package = "comments_zome", branch = "main" }
 
 [features]
 exercisestep = ["comments_zome/exercisestep"]

@@ -1,8 +1,8 @@
-import { DnaSource, ActionHash } from "@holochain/client";
+import { ActionHash } from "@holochain/client";
 import { pause, runScenario, Scenario } from "@holochain/tryorama";
 import { decode } from "@msgpack/msgpack";
 import test from "tape-promise/tape.js";
-import { forumDnaPath } from "./utils";
+import { forumAppPath } from "./utils";
 
 const isExercise = process.env["EXERCISE"] === "2";
 const stepNum = isExercise && parseInt(process.env["STEP"] as string);
@@ -13,13 +13,15 @@ test("comments zome: create and retrieve comments", async (t) => {
       // Construct proper paths for your DNAs.
       // This assumes DNA files created by the `hc dna pack` command.
 
-      // Set up the array of DNAs to be installed, which only consists of the
-      // test DNA referenced by path.
-      const dnas: DnaSource[] = [{ path: forumDnaPath }];
+      // Set up the app to be installed
+      const appSource = { appBundleSource: { path: forumAppPath } };
 
-      // Add 2 players with the test DNA to the Scenario. The returned players
+      // Add 2 players with the test app to the Scenario. The returned players
       // can be destructured.
-      const [alice, bob] = await scenario.addPlayersWithHapps([dnas, dnas]);
+      const [alice, bob] = await scenario.addPlayersWithApps([
+        appSource,
+        appSource,
+      ]);
 
       // Shortcut peer discovery through gossip and register all agents in every
       // conductor of the scenario.

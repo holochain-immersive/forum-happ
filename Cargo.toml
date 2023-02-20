@@ -1,11 +1,13 @@
 [workspace]
 resolver = "2"
-members = [
-    "dna/zomes/*",
-]
+members = ["dna/zomes/*"]
 
 [profile.dev]
 opt-level = "z"
 
 [profile.release]
 opt-level = "z"
+
+[workspace.dependencies]
+hdi = "0.2"
+hdk = "0.1"

@@ -1,28 +1,21 @@
-import { LitElement, html } from 'lit';
-import { state, customElement, property } from 'lit/decorators.js';
-import '@material/mwc-circular-progress';
-import '@material/mwc-icon-button';
-import '@type-craft/title/title-detail';
-import '@holochain-open-dev/utils/holo-identicon';
-import '@type-craft/content/content-detail';
-import { contextProvided } from '@lit-labs/context';
-import {
-  AgentPubKey,
-  Record,
-  AppWebsocket,
-  ActionHash,
-  InstalledAppInfo,
-  InstalledCell,
-} from '@holochain/client';
-import isEqual from 'lodash-es/isEqual';
+import { LitElement, html } from "lit";
+import { state, customElement, property } from "lit/decorators.js";
+import "@material/mwc-circular-progress";
+import "@material/mwc-icon-button";
+import "@type-craft/title/title-detail";
+import "@holochain-open-dev/utils/holo-identicon";
+import "@type-craft/content/content-detail";
+import { contextProvided } from "@lit-labs/context";
+import { Record, ActionHash, AppAgentClient } from "@holochain/client";
+import isEqual from "lodash-es/isEqual";
 
-import '../profiles/agent-nickname';
-import '../comments/comments-on-post';
+import "../profiles/agent-nickname";
+import "../comments/comments-on-post";
 
-import { appInfoContext, appWebsocketContext } from '../../../contexts';
-import { extractEntry, extractAction, extractActionHash } from '../../../utils';
+import { appAgentClientContext } from "../../../contexts";
+import { extractEntry, extractAction, extractActionHash } from "../../../utils";
 
-@customElement('post-detail')
+@customElement("post-detail")
 export class PostDetail extends LitElement {
   @property({ type: Object })
   postHash!: ActionHash;
@@ -30,28 +23,20 @@ export class PostDetail extends LitElement {
   @state()
   _post!: Record | undefined;
 
-  @contextProvided({ context: appWebsocketContext })
-  appWebsocket!: AppWebsocket;
+  @contextProvided({ context: appAgentClientContext })
+  client!: AppAgentClient;
 
-  @contextProvided({ context: appInfoContext })
-  appInfo!: InstalledAppInfo;
-
-  get myPubKey(): AgentPubKey {
-    return this.appInfo.cell_data[0].cell_id[1];
+  firstUpdated() {
+    this.fetchPost();
+    setInterval(() => this.fetchPost(), 3000);
   }
 
-  async firstUpdated() {
-    const cellData = this.appInfo.cell_data.find(
-      (c: InstalledCell) => c.role_id === 'forum'
-    )!;
-
-    this._post = await this.appWebsocket.callZome({
-      cap_secret: null,
-      cell_id: cellData.cell_id,
-      zome_name: 'posts',
-      fn_name: 'get_post',
+  async fetchPost() {
+    this._post = await this.client.callZome({
+      role_name: "forum",
+      zome_name: "posts",
+      fn_name: "get_post",
       payload: this.postHash,
-      provenance: cellData.cell_id[1],
     });
   }
 
@@ -79,13 +64,13 @@ export class PostDetail extends LitElement {
           >${extractEntry(this._post).content}</span
         >
 
-        ${isEqual(extractAction(this._post).author, this.myPubKey)
+        ${isEqual(extractAction(this._post).author, this.client.myPubKey)
           ? html`<mwc-icon-button
               icon="edit"
               style="position: absolute; right: -16px; top: -16px"
               @click=${() =>
                 this.dispatchEvent(
-                  new CustomEvent('updating-post', {
+                  new CustomEvent("updating-post", {
                     bubbles: true,
                     composed: true,
                     detail: {

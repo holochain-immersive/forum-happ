@@ -1,23 +1,16 @@
-import { LitElement, html } from 'lit';
-import { state, customElement, property } from 'lit/decorators.js';
-import {
-  InstalledCell,
-  AppWebsocket,
-  InstalledAppInfo,
-  ActionHash,
-  AgentPubKey,
-  Record,
-} from '@holochain/client';
-import { contextProvided } from '@lit-labs/context';
-import { TextField } from '@material/mwc-textfield';
-import isEqual from 'lodash-es/isEqual';
-import '@material/mwc-circular-progress';
-import '@type-craft/content/content-detail';
+import { LitElement, html } from "lit";
+import { state, customElement, property } from "lit/decorators.js";
+import { ActionHash, AppAgentClient, Record } from "@holochain/client";
+import { contextProvided } from "@lit-labs/context";
+import { TextField } from "@material/mwc-textfield";
+import isEqual from "lodash-es/isEqual";
+import "@material/mwc-circular-progress";
+import "@type-craft/content/content-detail";
 
-import { appInfoContext, appWebsocketContext } from '../../../contexts';
-import { extractEntry, extractAction, extractActionHash } from '../../../utils';
+import { appAgentClientContext } from "../../../contexts";
+import { extractEntry, extractAction, extractActionHash } from "../../../utils";
 
-@customElement('comments-on-post')
+@customElement("comments-on-post")
 export class CommentsOnPost extends LitElement {
   @property({ type: Object })
   postHash!: ActionHash;
@@ -25,65 +18,41 @@ export class CommentsOnPost extends LitElement {
   @state()
   _comments: Array<Record> | undefined;
 
-  @contextProvided({ context: appWebsocketContext })
-  appWebsocket!: AppWebsocket;
+  @contextProvided({ context: appAgentClientContext })
+  client!: AppAgentClient;
 
-  @contextProvided({ context: appInfoContext })
-  appInfo!: InstalledAppInfo;
-
-  get myPubKey(): AgentPubKey {
-    return this.appInfo.cell_data[0].cell_id[1];
-  }
-
-  async firstUpdated() {
-    await this.fetchComments();
+  firstUpdated() {
+    this.fetchComments();
+    setInterval(() => this.fetchComments(), 3000);
   }
 
   async fetchComments() {
-    const cellData = this.appInfo.cell_data.find(
-      (c: InstalledCell) => c.role_id === 'forum'
-    )!;
-
-    this._comments = await this.appWebsocket.callZome({
-      cap_secret: null,
-      cell_id: cellData.cell_id,
-      zome_name: 'comments',
-      fn_name: 'get_comments_on',
+    this._comments = await this.client.callZome({
+      role_name: "forum",
+      zome_name: "comments",
+      fn_name: "get_comments_on",
       payload: this.postHash,
-      provenance: cellData.cell_id[1],
     });
   }
 
   async comment(field: TextField) {
-    const cellData = this.appInfo.cell_data.find(
-      (c: InstalledCell) => c.role_id === 'forum'
-    )!;
-
-    await this.appWebsocket.callZome({
-      cap_secret: null,
-      cell_id: cellData.cell_id,
-      zome_name: 'comments',
-      fn_name: 'create_comment',
+    await this.client.callZome({
+      role_name: "forum",
+      zome_name: "comments",
+      fn_name: "create_comment",
       payload: { comment_on: this.postHash, comment: field.value },
-      provenance: cellData.cell_id[1],
     });
 
-    field.value = '';
+    field.value = "";
     await this.fetchComments();
   }
 
   async deleteComment(comment: ActionHash) {
-    const cellData = this.appInfo.cell_data.find(
-      (c: InstalledCell) => c.role_id === 'forum'
-    )!;
-
-    await this.appWebsocket.callZome({
-      cap_secret: null,
-      cell_id: cellData.cell_id,
-      zome_name: 'comments',
-      fn_name: 'delete_comment',
+    await this.client.callZome({
+      role_name: "forum",
+      zome_name: "comments",
+      fn_name: "delete_comment",
       payload: comment,
-      provenance: cellData.cell_id[1],
     });
 
     await this.fetchComments();
@@ -106,7 +75,7 @@ export class CommentsOnPost extends LitElement {
           >
         </div>
 
-        ${isEqual(extractAction(comment).author, this.myPubKey)
+        ${isEqual(extractAction(comment).author, this.client.myPubKey)
           ? html`
               <mwc-icon-button
                 icon="delete"
@@ -129,17 +98,17 @@ export class CommentsOnPost extends LitElement {
     }
 
     return html`<div style="display: flex; flex-direction: column">
-      ${this._comments.map(comment => this.renderComment(comment))}
+      ${this._comments.map((comment) => this.renderComment(comment))}
 
       <div style="display:flex; flex-direction: row; align-items: center">
-        <holo-identicon .hash=${this.myPubKey}></holo-identicon>
+        <holo-identicon .hash=${this.client.myPubKey}></holo-identicon>
         <mwc-textfield
           id="new-comment"
           style="margin-left: 8px; flex: 1"
           label="New Comment"
           outlined
           @keypress=${(e: KeyboardEvent) =>
-            e.key === 'Enter' && this.comment(e.target as TextField)}
+            e.key === "Enter" && this.comment(e.target as TextField)}
         ></mwc-textfield>
       </div>
     </div> `;

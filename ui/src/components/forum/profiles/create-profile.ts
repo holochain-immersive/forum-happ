@@ -1,17 +1,13 @@
-import { LitElement, html } from 'lit';
-import { state, customElement } from 'lit/decorators.js';
-import {
-  InstalledCell,
-  AppWebsocket,
-  InstalledAppInfo,
-} from '@holochain/client';
-import { contextProvided } from '@lit-labs/context';
-import { appWebsocketContext, appInfoContext } from '../../../contexts';
-import { Profile } from '../../../types/forum/profiles';
-import '@material/mwc-button';
-import '@type-craft/title/create-title';
+import { LitElement, html } from "lit";
+import { state, customElement } from "lit/decorators.js";
+import { AppAgentClient } from "@holochain/client";
+import { contextProvided } from "@lit-labs/context";
+import { appAgentClientContext } from "../../../contexts";
+import { Profile } from "../../../types/forum/profiles";
+import "@material/mwc-button";
+import "@type-craft/title/create-title";
 
-@customElement('create-profile')
+@customElement("create-profile")
 export class CreateProfile extends LitElement {
   @state()
   _nickname: string | undefined;
@@ -20,32 +16,23 @@ export class CreateProfile extends LitElement {
     return this._nickname;
   }
 
-  @contextProvided({ context: appWebsocketContext })
-  appWebsocket!: AppWebsocket;
-
-  @contextProvided({ context: appInfoContext })
-  appInfo!: InstalledAppInfo;
+  @contextProvided({ context: appAgentClientContext })
+  client!: AppAgentClient;
 
   async createProfile() {
-    const cellData = this.appInfo.cell_data.find(
-      (c: InstalledCell) => c.role_id === 'forum'
-    )!;
-
     const profile: Profile = {
       nickname: this._nickname!,
     };
 
-    await this.appWebsocket.callZome({
-      cap_secret: null,
-      cell_id: cellData.cell_id,
-      zome_name: 'profiles',
-      fn_name: 'create_profile',
+    await this.client.callZome({
+      role_name: "forum",
+      zome_name: "profiles",
+      fn_name: "create_profile",
       payload: profile,
-      provenance: cellData.cell_id[1],
     });
 
     this.dispatchEvent(
-      new CustomEvent('profile-created', {
+      new CustomEvent("profile-created", {
         composed: true,
         bubbles: true,
       })

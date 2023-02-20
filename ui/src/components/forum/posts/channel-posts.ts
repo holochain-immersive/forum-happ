@@ -1,19 +1,14 @@
-import { LitElement, html, PropertyValues } from 'lit';
-import { state, customElement, property } from 'lit/decorators.js';
-import {
-  InstalledCell,
-  AppWebsocket,
-  InstalledAppInfo,
-  ActionHash,
-} from '@holochain/client';
-import { contextProvided } from '@lit-labs/context';
-import { appInfoContext, appWebsocketContext } from '../../../contexts';
-import '@material/mwc-circular-progress';
-import '@type-craft/title/title-detail';
+import { LitElement, html, PropertyValues } from "lit";
+import { state, customElement, property } from "lit/decorators.js";
+import { ActionHash, AppAgentClient } from "@holochain/client";
+import { contextProvided } from "@lit-labs/context";
+import { appAgentClientContext } from "../../../contexts";
+import "@material/mwc-circular-progress";
+import "@type-craft/title/title-detail";
 
-import './post-detail';
+import "./post-detail";
 
-@customElement('channel-posts')
+@customElement("channel-posts")
 export class ChannelPosts extends LitElement {
   @property()
   channel!: string;
@@ -21,29 +16,29 @@ export class ChannelPosts extends LitElement {
   @state()
   _channelPosts: Array<ActionHash> | undefined;
 
-  @contextProvided({ context: appWebsocketContext })
-  appWebsocket!: AppWebsocket;
+  @contextProvided({ context: appAgentClientContext })
+  client!: AppAgentClient;
 
-  @contextProvided({ context: appInfoContext })
-  appInfo!: InstalledAppInfo;
+  firstUpdated() {
+    this.fetchPosts();
+    setInterval(() => this.fetchPosts(), 3000);
+  }
 
-  async updated(changedValues: PropertyValues) {
+  async fetchPosts() {
+    this._channelPosts = await this.client.callZome({
+      role_name: "forum",
+      zome_name: "posts",
+      fn_name: "get_channel_posts",
+      payload: this.channel,
+    });
+  }
+
+  updated(changedValues: PropertyValues) {
     super.updated(changedValues);
 
-    if (changedValues.has('channel')) {
+    if (changedValues.has("channel")) {
       this._channelPosts = undefined;
-
-      const cellData = this.appInfo.cell_data.find(
-        (c: InstalledCell) => c.role_id === 'forum'
-      )!;
-      this._channelPosts = await this.appWebsocket.callZome({
-        cap_secret: null,
-        cell_id: cellData.cell_id,
-        zome_name: 'posts',
-        fn_name: 'get_channel_posts',
-        payload: this.channel,
-        provenance: cellData.cell_id[1],
-      });
+      this.fetchPosts();
     }
   }
 
@@ -62,7 +57,7 @@ export class ChannelPosts extends LitElement {
       >`;
 
     return this._channelPosts.map(
-      postHash =>
+      (postHash) =>
         html`<post-detail
           .postHash=${postHash}
           style="margin-top: 16px;"

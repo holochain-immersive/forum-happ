@@ -1,73 +1,54 @@
-import '@webcomponents/scoped-custom-element-registry';
+import "@webcomponents/scoped-custom-element-registry";
 
-import { LitElement, css, html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { LitElement, css, html } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import {
-  AgentPubKey,
-  AppWebsocket,
+  AppAgentWebsocket,
+  AppAgentClient,
   ActionHash,
-  InstalledAppInfo,
-} from '@holochain/client';
-import { contextProvider } from '@lit-labs/context';
-import '@material/mwc-circular-progress';
-import '@material/mwc-button';
-import '@material/mwc-top-app-bar';
-import '@material/mwc-drawer';
-import '@material/mwc-fab';
+} from "@holochain/client";
+import { contextProvider } from "@lit-labs/context";
+import "@material/mwc-circular-progress";
+import "@material/mwc-button";
+import "@material/mwc-top-app-bar";
+import "@material/mwc-drawer";
+import "@material/mwc-fab";
 
-import './components/forum/profiles/create-profile';
-import './components/forum/profiles/agent-nickname';
-import './components/forum/posts/channel-posts';
-import './components/forum/posts/create-post';
-import './components/forum/posts/edit-post';
-import './components/forum/posts/all-channels';
-import { appWebsocketContext, appInfoContext } from './contexts';
+import "./components/forum/profiles/create-profile";
+import "./components/forum/profiles/agent-nickname";
+import "./components/forum/posts/channel-posts";
+import "./components/forum/posts/create-post";
+import "./components/forum/posts/edit-post";
+import "./components/forum/posts/all-channels";
+import { appAgentClientContext } from "./contexts";
 
-@customElement('holochain-app')
+@customElement("holochain-app")
 export class HolochainApp extends LitElement {
   @state() loading = true;
 
   @state() profileCreated = false;
 
-  @contextProvider({ context: appWebsocketContext })
+  @contextProvider({ context: appAgentClientContext })
   @property({ type: Object })
-  appWebsocket!: AppWebsocket;
-
-  @contextProvider({ context: appInfoContext })
-  @property({ type: Object })
-  appInfo!: InstalledAppInfo;
+  client!: AppAgentClient;
 
   @state()
   currentView:
-    | { view: 'main'; selectedChannel: string }
-    | { view: 'creatingPost' }
-    | { view: 'updatingPost'; actionHash: ActionHash } = {
-    view: 'main',
-    selectedChannel: 'general',
+    | { view: "main"; selectedChannel: string }
+    | { view: "creatingPost" }
+    | { view: "updatingPost"; actionHash: ActionHash } = {
+    view: "main",
+    selectedChannel: "general",
   };
 
-  myPubKey!: AgentPubKey;
-
   async firstUpdated() {
-    this.appWebsocket = await AppWebsocket.connect(
-      `ws://localhost:${process.env.HC_PORT}`
-    );
+    this.client = await AppAgentWebsocket.connect("", "");
 
-    this.appInfo = await this.appWebsocket.appInfo({
-      installed_app_id: 'forum',
-    });
-
-    const cell = this.appInfo.cell_data[0];
-
-    this.myPubKey = cell.cell_id[1];
-
-    const myProfile = await this.appWebsocket.callZome({
-      cap_secret: null,
-      cell_id: cell.cell_id,
-      zome_name: 'profiles',
-      fn_name: 'get_my_profile',
+    const myProfile = await this.client.callZome({
+      role_name: "forum",
+      zome_name: "profiles",
+      fn_name: "get_my_profile",
       payload: null,
-      provenance: this.myPubKey,
     });
 
     this.profileCreated = !!myProfile;
@@ -84,21 +65,21 @@ export class HolochainApp extends LitElement {
         }}
       ></create-profile>`;
 
-    if (this.currentView.view === 'creatingPost')
+    if (this.currentView.view === "creatingPost")
       return html`<create-post
         @post-created=${(e: any) => {
           this.currentView = {
-            view: 'main',
+            view: "main",
             selectedChannel: e.detail.channel,
           };
         }}
       ></create-post>`;
 
-    if (this.currentView.view === 'updatingPost')
+    if (this.currentView.view === "updatingPost")
       return html`<edit-post
         .postHash=${this.currentView.actionHash}
         @post-updated=${() => {
-          this.currentView = { view: 'main', selectedChannel: 'general' };
+          this.currentView = { view: "main", selectedChannel: "general" };
         }}
       ></edit-post>`;
 
@@ -121,7 +102,7 @@ export class HolochainApp extends LitElement {
                 style="display: flex; flex-direction: column; width: 800px;"
                 @updating-post=${(e: CustomEvent) => {
                   this.currentView = {
-                    view: 'updatingPost',
+                    view: "updatingPost",
                     actionHash: e.detail.actionHash,
                   };
                 }}
@@ -136,7 +117,7 @@ export class HolochainApp extends LitElement {
         icon="add"
         extended
         @click=${() => {
-          this.currentView = { view: 'creatingPost' };
+          this.currentView = { view: "creatingPost" };
         }}
       ></mwc-fab>
     `;
@@ -150,10 +131,10 @@ export class HolochainApp extends LitElement {
         slot="actionItems"
         style="margin-left: 16px; display: flex; flex-direction: row; align-items: center;"
       >
-        <holo-identicon .hash=${this.myPubKey}></holo-identicon>
+        <holo-identicon .hash=${this.client.myPubKey}></holo-identicon>
         <agent-nickname
           style="margin-left: 8px;"
-          .agentPubKey=${this.myPubKey}
+          .agentPubKey=${this.client.myPubKey}
         ></agent-nickname>
       </div>
     `;

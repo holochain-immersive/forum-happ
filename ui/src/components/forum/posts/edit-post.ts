@@ -1,34 +1,25 @@
-import { LitElement, html } from 'lit';
-import { state, customElement, property, query } from 'lit/decorators.js';
-import {
-  InstalledCell,
-  AppWebsocket,
-  InstalledAppInfo,
-  Record,
-  ActionHash,
-} from '@holochain/client';
-import { contextProvided } from '@lit-labs/context';
-import '@material/mwc-button';
-import '@material/mwc-textarea';
-import '@material/mwc-textfield';
-import { TextArea } from '@material/mwc-textarea';
-import { TextField } from '@material/mwc-textfield';
-import '@type-craft/title/create-title';
-import '@type-craft/content/create-content';
+import { LitElement, html } from "lit";
+import { state, customElement, property, query } from "lit/decorators.js";
+import { AppAgentClient, Record, ActionHash } from "@holochain/client";
+import { contextProvided } from "@lit-labs/context";
+import "@material/mwc-button";
+import "@material/mwc-textarea";
+import "@material/mwc-textfield";
+import { TextArea } from "@material/mwc-textarea";
+import { TextField } from "@material/mwc-textfield";
+import "@type-craft/title/create-title";
+import "@type-craft/content/create-content";
 
-import { appWebsocketContext, appInfoContext } from '../../../contexts';
-import { extractEntry, extractActionHash } from '../../../utils';
+import { appAgentClientContext } from "../../../contexts";
+import { extractEntry, extractActionHash } from "../../../utils";
 
-@customElement('edit-post')
+@customElement("edit-post")
 export class EditPost extends LitElement {
   @property({ type: Object })
   postHash!: ActionHash;
 
-  @contextProvided({ context: appWebsocketContext })
-  appWebsocket!: AppWebsocket;
-
-  @contextProvided({ context: appInfoContext })
-  appInfo!: InstalledAppInfo;
+  @contextProvided({ context: appAgentClientContext })
+  client!: AppAgentClient;
 
   isPostValid() {
     return this._title && this._content;
@@ -43,24 +34,18 @@ export class EditPost extends LitElement {
   @state()
   _content!: string;
 
-  @query('#title')
+  @query("#title")
   titleField!: TextField;
 
-  @query('#content')
+  @query("#content")
   contentField!: TextArea;
 
   async firstUpdated() {
-    const cellData = this.appInfo.cell_data.find(
-      (c: InstalledCell) => c.role_id === 'forum'
-    )!;
-
-    const post: any = await this.appWebsocket.callZome({
-      cap_secret: null,
-      cell_id: cellData.cell_id,
-      zome_name: 'posts',
-      fn_name: 'get_post',
+    const post: any = await this.client.callZome({
+      role_name: "forum",
+      zome_name: "posts",
+      fn_name: "get_post",
       payload: this.postHash,
-      provenance: cellData.cell_id[1],
     });
 
     this._title = extractEntry(post).title;
@@ -73,15 +58,10 @@ export class EditPost extends LitElement {
   }
 
   async updatePost() {
-    const cellData = this.appInfo.cell_data.find(
-      (c: InstalledCell) => c.role_id === 'forum'
-    )!;
-
-    await this.appWebsocket.callZome({
-      cap_secret: null,
-      cell_id: cellData.cell_id,
-      zome_name: 'posts',
-      fn_name: 'update_post',
+    await this.client.callZome({
+      role_name: "forum",
+      zome_name: "posts",
+      fn_name: "update_post",
       payload: {
         post_to_update: extractActionHash(this._post!),
         updated_post: {
@@ -89,11 +69,10 @@ export class EditPost extends LitElement {
           content: this._content,
         },
       },
-      provenance: cellData.cell_id[1],
     });
 
     this.dispatchEvent(
-      new CustomEvent('post-updated', {
+      new CustomEvent("post-updated", {
         composed: true,
         bubbles: true,
       })

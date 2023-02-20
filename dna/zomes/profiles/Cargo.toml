@@ -11,8 +11,8 @@ name = "profiles"
 derive_more = "0"
 serde = "1"
 
-hdk = {version = "0.0.140"}
-profiles_zome = {git = "https://github.com/holochain-immersive/zomes", package = "profiles_zome", branch = "main"}
+hdk = { workspace = true }
+profiles_zome = { git = "https://github.com/holochain-immersive/zomes", package = "profiles_zome", branch = "main" }
 
 [features]
 exercisestep = ["profiles_zome/exercisestep"]
