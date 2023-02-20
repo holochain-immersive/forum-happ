@@ -62,7 +62,7 @@ test("profiles zome: create profile and retrieve it", async (t) => {
       if (isExercise && stepNum === 2) return;
 
       // Wait for the created entry to be propagated to the other node.
-      await pause(100);
+      await pause(500);
 
       profile = await bob.cells[0].callZome({
         zome_name: "profiles",

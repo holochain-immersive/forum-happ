@@ -275,7 +275,7 @@ if (!isExercise || stepNum >= 6) {
         if (isExercise && stepNum < 7) return;
 
         // Wait for the created entry to be propagated to the other node.
-        await pause(100);
+        await pause(500);
 
         let allChannels: Array<string> = await bob.cells[0].callZome({
           zome_name: "posts",
