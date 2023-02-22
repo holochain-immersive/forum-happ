@@ -9,22 +9,11 @@ These are the instructions for the first step, amenable to all the other steps:
 - This is the error message you should see:
 
 ```
-# profiles zome: create profile and retrieve it
-not ok 1 Error: There are no entries defined in the profiles zome
-  ---
-    operator: error
-    at: bound (/home/guillem/projects/immersive/forum-happ/node_modules/tape-promise/node_modules/onetime/index.js:30:12)
-    stack: |-
-      Error: There are no entries defined in the profiles zome
-          at file:///home/guillem/projects/immersive/forum-happ/tests/src/profile.ts:35:13
-          at processTicksAndRejections (node:internal/process/task_queues:96:5)
-          at async runScenario (file:///home/guillem/projects/immersive/forum-happ/node_modules/@holochain/tryorama/ts/src/local/scenario.ts:202:5)
-  ...
-
-1..1
-# tests 1
-# pass  0
-# fail  1
+Error: There are no entries defined in the profiles zome
+    at file:///home/guillem/projects/holochain/immersive/forum-happ/tests/src/profile.ts:36:15
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async runScenario (file:///home/guillem/projects/holochain/immersive/forum-happ/node_modules/@holochain/tryorama/lib/local/scenario.js:102:9)
+    at async file:///home/guillem/projects/holochain/immersive/forum-happ/tests/src/profile.ts:10:5
 ```
 
 2. Implement the missing function that that step requires (see step 1 in the "Exercise 1: Profiles zome" section of this document).
@@ -36,6 +25,19 @@ not ok 1 Error: There are no entries defined in the profiles zome
 5. When you are done with all the steps in an exercise, move to the next exercise (see step 1 in the "Exercise 2: Comments zome" of this document):
 
 - Eg. for first step of the 2nd exercise, you should run `EXERCISE=2 STEP=1 npm test`.
+
+WARNING! If at any point in time, you see a long error message that ends like this one:
+
+```
+  = note: rust-lld: error: duplicate symbol: __num_link_types
+          >>> defined in /home/guillem/projects/holochain/immersive/forum-happ/target/wasm32-unknown-unknown/release/deps/profiles.profiles.5a73b8e7-cgu.6.rcgu.o
+          >>> defined in /home/guillem/projects/holochain/immersive/forum-happ/target/wasm32-unknown-unknown/release/deps/libprofiles_zome-d5e1996845075c54.rlib(profiles_zome-d5e1996845075c54.profiles_zome.2103d8eb-cgu.1.rcgu.o)
+          
+
+error: could not compile `profiles` due to previous error
+```
+
+With the "duplicate symbol" message, it means that you are running your tests with the wrong step number. Double-check that you are running the appropriate step for the code exercise you are trying to solve.
 
 ## Exercise 1: Profiles zome
 

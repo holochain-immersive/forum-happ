@@ -4,7 +4,6 @@ This is a basic Holochain training, with step by step exercises and their tests.
 
 It consists of a forum hApp that has already been implemented, both its backend and a small UI. You can boot up the UI at first to see what are their functionalities.
 
-
 ## Your goals
 
 Your goal is to re-implement this forum happ, one step at a time.
@@ -13,7 +12,7 @@ To do that, go into `EXERCISES.md` and follow its instructions. Have fun!
 
 ## Environment Setup
 
-1. Install the holochain dev environment (only nix-shell is required): https://developer.holochain.org/docs/install/
+1. Install the holochain dev environment: https://developer.holochain.org/docs/install/
 2. Enable Holochain cachix with:
 
 ```bash
@@ -25,7 +24,7 @@ cachix use holochain-ci
 4. Enter the nix shell by running this in the root folder of the repository: 
 
 ```bash
-nix-shell
+nix develop
 npm install
 ```
 
@@ -48,7 +47,7 @@ You should be able to see all the posts that other participants have created in 
 Create a whole network of nodes connected to each other and their respective UIs with.
 
 ```bash
-npm run network 3
+AGENTS=3 npm run network 
 ```
 
 Substitute the "3" for the number of nodes that you want to bootstrap in your network.
