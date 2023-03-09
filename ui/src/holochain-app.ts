@@ -99,7 +99,7 @@ export class HolochainApp extends LitElement {
             <div class="flex-scrollable-y">
               <channel-posts
                 .channel=${this.currentView.selectedChannel}
-                style="display: flex; flex-direction: column; width: 800px;"
+                style="display: flex; flex-direction: column; width: 600px;"
                 @updating-post=${(e: CustomEvent) => {
                   this.currentView = {
                     view: "updatingPost",
