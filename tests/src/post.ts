@@ -275,7 +275,7 @@ if (!isExercise || stepNum >= 6) {
         if (isExercise && stepNum < 7) return;
 
         // Wait for the created entry to be propagated to the other node.
-        await pause(500);
+        await pause(1000);
 
         let allChannels: Array<string> = await bob.cells[0].callZome({
           zome_name: "posts",
@@ -360,7 +360,7 @@ if (!isExercise || stepNum >= 8) {
         );
 
         // Wait for the created entry to be propagated to the other node.
-        await pause(100);
+        await pause(1000);
 
         let updatedPostHash: ActionHash = await alice.cells[0].callZome({
           zome_name: "posts",
@@ -380,7 +380,7 @@ if (!isExercise || stepNum >= 8) {
         );
 
         // Wait for the created entry to be propagated to the other node.
-        await pause(100);
+        await pause(1000);
 
         updatedPostHash = await alice.cells[0].callZome({
           zome_name: "posts",
@@ -401,7 +401,7 @@ if (!isExercise || stepNum >= 8) {
         );
 
         // Wait for the created entry to be propagated to the other node.
-        await pause(100);
+        await pause(1000);
 
         updatedPostHash = await alice.cells[0].callZome({
           zome_name: "posts",
@@ -422,7 +422,7 @@ if (!isExercise || stepNum >= 8) {
         );
 
         // Wait for the created entry to be propagated to the other node.
-        await pause(100);
+        await pause(1000);
 
         let updatedPost: Record = await alice.cells[0].callZome({
           zome_name: "posts",
