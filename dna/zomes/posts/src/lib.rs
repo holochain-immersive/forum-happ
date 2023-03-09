@@ -2,6 +2,6 @@ use hdk::prelude::*;
 
 
 /**
- * DON'T TOUCH
+ * Add your edits to the bottom of this file
  */
 pub use posts_zome;
