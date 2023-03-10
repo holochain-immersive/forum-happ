@@ -28,6 +28,7 @@ if (isExercise && stepNum === 1) {
           // Shortcut peer discovery through gossip and register all agents in every
           // conductor of the scenario.
           await scenario.shareAllAgents();
+          console.log("Forum hApp - Exercise 3: Alice and Bob join the DHT");
 
           let entryDefs: any = await alice.cells[0].callZome({
             zome_name: "posts",
@@ -71,7 +72,9 @@ if (isExercise && stepNum === 2) {
           // Shortcut peer discovery through gossip and register all agents in every
           // conductor of the scenario.
           await scenario.shareAllAgents();
+          console.log("Forum hApp - Exercise 3: Alice and Bob join the DHT");
 
+          console.log("Forum hApp - Exercise 3: Alice tries to create a post");
           let postHash = await alice.cells[0].callZome({
             zome_name: "posts",
             fn_name: "create_post",
@@ -119,6 +122,9 @@ if (isExercise && stepNum === 3) {
           // Shortcut peer discovery through gossip and register all agents in every
           // conductor of the scenario.
           await scenario.shareAllAgents();
+          console.log("Forum hApp - Exercise 3: Alice and Bob join the DHT");
+
+          console.log("Forum hApp - Exercise 3: Alice tries to create a post");
 
           let postHash = await alice.cells[0].callZome({
             zome_name: "posts",
@@ -168,6 +174,9 @@ if (isExercise && stepNum === 4) {
           // Shortcut peer discovery through gossip and register all agents in every
           // conductor of the scenario.
           await scenario.shareAllAgents();
+          console.log("Forum hApp - Exercise 3: Alice and Bob join the DHT");
+
+          console.log("Forum hApp - Exercise 3: Alice tries to create a post");
 
           let postHash = await alice.cells[0].callZome({
             zome_name: "posts",
@@ -189,7 +198,10 @@ if (isExercise && stepNum === 4) {
           if (isExercise && stepNum < 7) return;
 
           // Wait for the created entry to be propagated to the other node.
-          await pause(100);
+          await pause(1000);
+          console.log(
+            "Forum hApp - Exercise 3: Alice tries to get all the channels"
+          );
 
           let allChannels: Array<string> = await bob.cells[0].callZome({
             zome_name: "posts",
@@ -239,9 +251,7 @@ if (!isExercise || stepNum >= 6) {
           // Shortcut peer discovery through gossip and register all agents in every
           // conductor of the scenario.
           await scenario.shareAllAgents();
-          console.log(
-            "Forum hApp - Exercise 3: Alice an - Exercise 3d Bob join the DHT"
-          );
+          console.log("Forum hApp - Exercise 3: Alice and Bob join the DHT");
           console.log(
             "Forum hApp - Exercise 3: Bob tries to get the posts for the 'general' channel"
           );
@@ -378,6 +388,9 @@ if (!isExercise || stepNum >= 8) {
           // Shortcut peer discovery through gossip and register all agents in every
           // conductor of the scenario.
           await scenario.shareAllAgents();
+          console.log("Forum hApp - Exercise 3: Alice and Bob join the DHT");
+
+          console.log("Forum hApp - Exercise 3: Alice tries to create a post");
 
           let postHash = await alice.cells[0].callZome({
             zome_name: "posts",
@@ -399,6 +412,9 @@ if (!isExercise || stepNum >= 8) {
           // Wait for the created entry to be propagated to the other node.
           await pause(1000);
 
+          console.log(
+            "Forum hApp - Exercise 3: Alice tries to update their post"
+          );
           let updatedPostHash: ActionHash = await alice.cells[0].callZome({
             zome_name: "posts",
             fn_name: "update_post",
@@ -418,6 +434,9 @@ if (!isExercise || stepNum >= 8) {
 
           // Wait for the created entry to be propagated to the other node.
           await pause(1000);
+          console.log(
+            "Forum hApp - Exercise 3: Alice tries to update their updated post"
+          );
 
           updatedPostHash = await alice.cells[0].callZome({
             zome_name: "posts",
@@ -439,6 +458,9 @@ if (!isExercise || stepNum >= 8) {
 
           // Wait for the created entry to be propagated to the other node.
           await pause(1000);
+          console.log(
+            "Forum hApp - Exercise 3: Alice tries to update their second updated post"
+          );
 
           updatedPostHash = await alice.cells[0].callZome({
             zome_name: "posts",
@@ -460,6 +482,7 @@ if (!isExercise || stepNum >= 8) {
 
           // Wait for the created entry to be propagated to the other node.
           await pause(1000);
+          console.log("Forum hApp - Exercise 3: Alice tries to get their post");
 
           let updatedPost: Record = await alice.cells[0].callZome({
             zome_name: "posts",
