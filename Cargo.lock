@@ -250,7 +250,7 @@ dependencies = [
 [[package]]
 name = "comments_zome"
 version = "0.0.1"
-source = "git+https://github.com/holochain-immersive/zomes?branch=main#6b67bf86b34a9c0c0c963ebc4014587af0bfd58f"
+source = "git+https://github.com/holochain-immersive/zomes?branch=main#7514f18114dc7b0b410d9c558a6715bb9708e54c"
 dependencies = [
  "derive_more",
  "hdk",
