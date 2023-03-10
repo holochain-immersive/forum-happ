@@ -40,7 +40,7 @@ test("comments zome: create and retrieve comments", async (t) => {
       });
 
       // Wait for the created entry to be propagated to the other node.
-      await pause(100);
+      await pause(1000);
 
       if (!(isExercise && stepNum < 4)) {
         let emptyComments: Array<any> = await bob.cells[0].callZome({
@@ -55,6 +55,20 @@ test("comments zome: create and retrieve comments", async (t) => {
         );
       }
 
+      let entryDefs: any = await alice.cells[0].callZome({
+        zome_name: "comments",
+        fn_name: "entry_defs",
+        payload: null,
+      });
+
+      t.equal(
+        entryDefs.Defs.length,
+        1,
+        "entry_defs should have 1 entry def defined"
+      );
+
+      if (isExercise && stepNum === 1) return;
+
       const commentHash = await bob.cells[0].callZome({
         zome_name: "comments",
         fn_name: "create_comment",
@@ -67,11 +81,24 @@ test("comments zome: create and retrieve comments", async (t) => {
         commentHash,
         "create_comment should return the action hash of the created comment"
       );
+      if (isExercise && stepNum === 2) return;
 
-      if (isExercise && stepNum < 4) return;
+      let linkTypes: number = await alice.cells[0].callZome({
+        zome_name: "comments",
+        fn_name: "__num_link_types",
+        payload: null,
+      });
+
+      t.equal(
+        linkTypes,
+        1,
+        "the comments zome should have 1 link type defined"
+      );
+
+      if (isExercise && stepNum === 3) return;
 
       // Wait for the created entry to be propagated to the other node.
-      await pause(200);
+      await pause(1000);
 
       let comments: Array<any> = await bob.cells[0].callZome({
         zome_name: "comments",
