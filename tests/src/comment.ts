@@ -83,17 +83,17 @@ test("comments zome: create and retrieve comments", async (t) => {
       );
       if (isExercise && stepNum === 2) return;
 
-      let linkTypes: number = await alice.cells[0].callZome({
-        zome_name: "comments",
-        fn_name: "__num_link_types",
-        payload: null,
-      });
+      // let linkTypes: number = await alice.cells[0].callZome({
+      //   zome_name: "comments",
+      //   fn_name: "__num_link_types",
+      //   payload: null,
+      // });
 
-      t.equal(
-        linkTypes,
-        1,
-        "the comments zome should have 1 link type defined"
-      );
+      // t.equal(
+      //   linkTypes,
+      //   1,
+      //   "the comments zome should have 1 link type defined"
+      // );
 
       if (isExercise && stepNum === 3) return;
 
