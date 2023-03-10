@@ -92,6 +92,8 @@ Solve the next steps in the `comments` zome, in `dna/zomes/comments/lib.rs`.
    
 - In the `create_comment` function, after the comment is created, create a link from the `comment_on` hash to the `comment` hash.
 
+*Note: there is not any tests for this step, so if you run `EXERCISE=2 STEP=3 npm test` won't result in an error.
+
 4. Create a function `get_comments_on` that receives a `ActionHash` for a post and returns all the comments that have been created for that post, in the form of a `Vec<Record>`.
 
 5. Create a function `delete_comment` that receives the `ActionHash` of the comment that is to be deleted, and deletes that comment.
@@ -130,9 +132,18 @@ Solve the next steps in the `posts` zome, in `dna/zomes/posts/lib.rs`.
 
 - You'll need to add a new link type variant: `ChannelToPost`.
 
+*Note: there is not any tests for this step, so if you run `EXERCISE=3 STEP=5 npm test` won't result in an error.
+
 6. Create a function `get_channel_posts` that receives a channel `String`, and returns a `Vec<ActionHash>` for all the posts that have been created in this in the given channel. The action hashes should be ordered by the time that they were created in descendant order (most recent ones first).
 
+- Use the `path_entry_hash()` method for a `Path` to calculate the `EntryHash` of the channel's path.
+
 7. Create a function `get_all_channels` that doesn't receive any input parameter, and returns a `Vec<String>` with the names of all the channels that have been created.
+
+- Recreate the root `TypedPath` path for the channel.
+- Get the list of paths for the channels using the `children_paths()` method for a `TypedPath`.
+- Get the last component of each path with the `leaf()` method for a `TypedPath`.
+- Transform the last component to a normal String using `String::try_from()`.
 
 8. Create a function `update_post`, that receives as input an `UpdatePostInput` struct, updates the post and returns the `ActionHash` of the updated post. Define the `UpdatePostInput` as a struct that has a field `udpated_post` of type `Post`, and an `post_to_update` field of type `ActionHash`.
 
