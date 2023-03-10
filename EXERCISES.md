@@ -63,9 +63,9 @@ Solve the next steps in the `profiles` zome, in `dna/zomes/profiles/lib.rs`.
 - Annotate this enum with `#[hdk_link_types]` to declare the link types for this zome.
 - Modify the `create_profile` function: after the profile is created, create a link from the public key of the agent calling the function to the profile action hash, with `LinkTypes::AgentToProfile` as the link type.
 
-4. Create a function `get_agent_profile` that receives the public key for the agent we are looking the profile for, and returns the profile in an `Option<Profile>`.
+4. Create a function `get_agent_profile` that receives the public key for the agent we are looking the profile for, and returns the profile in an `ExternResult<Option<Profile>>`.
 
-5. Create a function `get_my_profile` that doesn't receive any input parameters, and returns an `Option<Profile>` with our own profile if we have created it.
+5. Create a function `get_my_profile` that doesn't receive any input parameters, and returns an `ExternResult<Option<Profile>>` with our own profile if we have created it.
 
 ## Exercise 2: Comments zome
 
