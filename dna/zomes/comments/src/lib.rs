@@ -55,7 +55,6 @@ fn delete_comment(hash: ActionHash) -> ExternResult<()> {
 }
 
 
-
 /**
  * Add your edits to the bottom of this file
  */
