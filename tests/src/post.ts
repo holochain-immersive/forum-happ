@@ -153,6 +153,9 @@ if (isExercise && stepNum === 3) {
   });
 }
 
+export function extractEntry(record: Record): any {
+  return decode((record.entry as any)?.Present.entry) as any;
+}
 if (isExercise && stepNum === 4) {
   test("posts zome: create_post creates a path for the channel", async (t) => {
     try {
@@ -178,21 +181,32 @@ if (isExercise && stepNum === 4) {
 
           console.log("Forum hApp - Exercise 3: Alice tries to create a post");
 
+          const post = {
+            title: "This is my first post",
+            content: "And I intend to make it good!",
+          };
+
           let postHash = await alice.cells[0].callZome({
             zome_name: "posts",
             fn_name: "create_post",
             payload: {
-              post: {
-                title: "This is my first post",
-                content: "And I intend to make it good!",
-              },
+              post,
               channel: "general",
             },
           });
 
-          t.ok(
-            postHash,
-            "create_post should return the action hash of the created post"
+          t.ok(postHash, "create_post should an action hash");
+
+          let postRecord: Record = await alice.cells[0].callZome({
+            zome_name: "posts",
+            fn_name: "get_post",
+            payload: postHash,
+          });
+
+          t.equal(
+            extractEntry(postRecord),
+            post,
+            "create_post should return the action hash for the created post"
           );
 
           if (isExercise && stepNum < 7) return;
