@@ -1,5 +1,6 @@
 import { Record, ActionHash } from "@holochain/client";
 import { pause, runScenario, Scenario } from "@holochain/tryorama";
+import { decode } from "@msgpack/msgpack";
 import _ from "lodash";
 import test from "tape-promise/tape.js";
 import { forumAppPath } from "./utils";
