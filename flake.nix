@@ -26,6 +26,16 @@
             devShells.default = pkgs.mkShell {
               inputsFrom = [ inputs.holochain.devShells.${system}.holonix ];
               packages = [ pkgs.nodejs-18_x ];
+              buildInputs = (with pkgs; [
+                # this is required for glib-networking
+                glib
+              ]);
+              
+              shellHook = ''
+                export GIO_MODULE_DIR=${pkgs.glib-networking}/lib/gio/modules/
+                export GIO_EXTRA_MODULES=${pkgs.glib-networking}/lib/gio/modules
+                export WEBKIT_DISABLE_COMPOSITING_MODE=1
+              '';
             };
           };
       };

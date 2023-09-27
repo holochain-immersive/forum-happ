@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@holochain-open-dev/utils": "^0.1.0",
-    "@holochain/client": "^0.12.0",
+    "@holochain/client": "^0.13.0",
     "@lit-labs/context": "^0.1.2",
     "@material/mwc-button": "^0.26.1",
     "@material/mwc-circular-progress": "^0.26.1",
