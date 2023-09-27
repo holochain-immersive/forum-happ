@@ -134,7 +134,7 @@ Solve the next steps in the `posts` zome, in `dna/zomes/posts/lib.rs`.
 
 *Note: there is not any tests for this step, so if you run `EXERCISE=3 STEP=5 npm test` won't result in an error.
 
-6. Create a function `get_channel_posts` that receives a channel `String`, and returns a `Vec<ActionHash>` for all the posts that have been created in this in the given channel. The action hashes should be ordered by the time that they were created in descendant order (most recent ones first).
+6. Create a function `get_channel_posts` that receives a channel `String`, and returns a `Vec<ActionHash>` for all the posts that have been created in the given channel. The action hashes should be ordered by the time that they were created in descendant order (most recent ones first).
 
 - Use the `path_entry_hash()` method for a `Path` to calculate the `EntryHash` of the channel's path.
 
