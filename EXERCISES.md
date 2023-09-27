@@ -92,7 +92,7 @@ Solve the next steps in the `comments` zome, in `dna/zomes/comments/lib.rs`.
    
 - In the `create_comment` function, after the comment is created, create a link from the `comment_on` hash to the `comment` hash.
 
-*Note: there is not any tests for this step, so if you run `EXERCISE=2 STEP=3 npm test` won't result in an error.
+*Note: there are no tests for this step, so if you run `EXERCISE=2 STEP=3 npm test`, it won't result in an error.
 
 4. Create a function `get_comments_on` that receives a `ActionHash` for a post and returns all the comments that have been created for that post, in the form of a `Vec<Record>`.
 
@@ -119,6 +119,8 @@ Solve the next steps in the `posts` zome, in `dna/zomes/posts/lib.rs`.
 2. Create a function `create_post` that receives a `CreatePostInput` struct, creates the post and returns the `ActionHash` of the created post. Define the `CreatePostInput` as a struct that has a field `post` of type `Post`.
 
 3. Add a `channel` field of type `String` in the `CreatePostInput` struct.
+
+*Note: there are no tests for this step, so if you run `EXERCISE=2 STEP=3 npm test`, it won't result in an error.
 
 4. Create the given channel:
 

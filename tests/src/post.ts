@@ -204,7 +204,7 @@ if (isExercise && stepNum === 4) {
             payload: postHash,
           });
 
-          t.equal(
+          t.deepEqual(
             extractEntry(postRecord),
             post,
             "create_post should return the action hash for the created post"
