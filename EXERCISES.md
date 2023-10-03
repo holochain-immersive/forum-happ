@@ -59,7 +59,7 @@ Solve the next steps in the `profiles` zome, in `dna/zomes/profiles/lib.rs`.
 - Define an `EntryTypes` enum, with only one variant named `Profile` that has the `Profile` struct as its payload.
 - Annotate this enum with `#[hdk_entry_defs]` and `#[unit_enum(UnitTypes)]` to declare the entry types for this zome.
 
-2. Create a function `create_profile` that receives a `Profile` struct, creates the `Profile` entry, and returns the `ActionHash` for the action that was just created.
+2. Create a function `create_profile` that receives a `Profile` struct, creates the `Profile` entry, and returns an `ExternResult<ActionHash>` with the `ActionHash` for the action that was just created.
 
 3. Create a link from the author's public key to the profile after the profile is created:
 
@@ -99,7 +99,7 @@ Solve the next steps in the `comments` zome, in `dna/zomes/comments/lib.rs`.
 - Annotate this struct with `#[hdk_entry_helper]` to declare it as a Holochain entry.
 - Define the entry types enum and add the `Comment` entry type to to it.
 
-2. Create a function `create_comment` that receives a `CreateCommentInput` struct, creates the comment and returns the `ActionHash` of the created comment.
+2. Create a function `create_comment` that receives a `CreateCommentInput` struct, creates the comment and returns an `ExternResult<ActionHash>` with the `ActionHash` of the created comment.
 
 - Define the `CreateCommentInput` as a struct that has two fields:
   - `comment_on`, of type `ActionHash`. This refers the post that is being commented on.
@@ -111,7 +111,7 @@ Solve the next steps in the `comments` zome, in `dna/zomes/comments/lib.rs`.
 
 > Note: there are no tests for this step, so if you run `EXERCISE=2 STEP=3 npm test`, it won't result in an error.
 
-4. Create a function `get_comments_on` that receives a `ActionHash` for a post and returns all the comments that have been created for that post, in the form of a `Vec<Record>`.
+4. Create a function `get_comments_on` that receives a `ActionHash` for a post and returns all the comments that have been created for that post, in the form of a `ExternResult<Vec<Record>>`.
 
 5. Create a function `delete_comment` that receives the `ActionHash` of the comment that is to be deleted, and deletes that comment.
 
@@ -133,7 +133,7 @@ Solve the next steps in the `posts` zome, in `dna/zomes/posts/lib.rs`.
 - Annotate this struct with `#[hdk_entry_helper]` to declare it as a Holochain entry.
 - Define the entry types enum and add the `Post` entry type to to it.
 
-2. Create a function `create_post` that receives a `CreatePostInput` struct, creates the post and returns the `ActionHash` of the created post. Define the `CreatePostInput` as a struct that has a field `post` of type `Post`.
+2. Create a function `create_post` that receives a `CreatePostInput` struct, creates the post and returns an `ExternResult<ActionHash>` with the `ActionHash` of the created post. Define the `CreatePostInput` as a struct that has a field `post` of type `Post`.
 
 3. Add a `channel` field of type `String` in the `CreatePostInput` struct.
 
@@ -144,8 +144,8 @@ Solve the next steps in the `posts` zome, in `dna/zomes/posts/lib.rs`.
 - Define the link types enum with only one variant: `PathToChannel`.
 - After the post gets created, build a path of the form `all_posts.<CHANNEL_NAME>`. 
   - Eg. if the given channel is `nature`, the path should be `all_posts.nature`.
-- Add the `PathToChannel` link type to the path to turn it into a `TypedPath`-
-- Call `.ensure()` with the typed path so that a path gets created for the given channel name. The path has to be of the form . 
+- Add the `PathToChannel` link type to the path to turn it into a `TypedPath`.
+- Call `.ensure()` with the typed path so that a path gets created for the given channel name. 
 
 5. Change the function `create_post` so that after the channel path gets created, it also creates a link from the entry hash of that channel path to the action hash of the created post.
 
@@ -153,17 +153,17 @@ Solve the next steps in the `posts` zome, in `dna/zomes/posts/lib.rs`.
 
 > Note: there is not any tests for this step, so if you run `EXERCISE=3 STEP=5 npm test` won't result in an error.
 
-6. Create a function `get_channel_posts` that receives a channel `String`, and returns a `Vec<ActionHash>` for all the posts that have been created in the given channel. The action hashes should be ordered by the time that they were created in descendant order (most recent ones first).
+6. Create a function `get_channel_posts` that receives a channel `String`, and returns an `ExternResult<Vec<ActionHash>>` for all the posts that have been created in the given channel. The action hashes should be ordered by the time that they were created in descendant order (most recent ones first).
 
 - Use the `path_entry_hash()` method for a `Path` to calculate the `EntryHash` of the channel's path.
 
-7. Create a function `get_all_channels` that doesn't receive any input parameter, and returns a `Vec<String>` with the names of all the channels that have been created.
+7. Create a function `get_all_channels` that doesn't receive any input parameter, and returns a `ExternResult<Vec<String>>` with the names of all the channels that have been created.
 
 - Recreate the root `TypedPath` path for the channel.
 - Get the list of paths for the channels using the `children_paths()` method for a `TypedPath`.
 - Get the last component of each path with the `leaf()` method for a `TypedPath`.
 - Transform the last component to a normal String using `String::try_from()`.
 
-8. Create a function `update_post`, that receives as input an `UpdatePostInput` struct, updates the post and returns the `ActionHash` of the updated post. Define the `UpdatePostInput` as a struct that has a field `udpated_post` of type `Post`, and an `post_to_update` field of type `ActionHash`.
+8. Create a function `update_post`, that receives as input an `UpdatePostInput` struct, updates the post and returns an `ExternResult<ActionHash>` with the `ActionHash` of the updated post. Define the `UpdatePostInput` as a struct that has a field `udpated_post` of type `Post`, and an `post_to_update` field of type `ActionHash`.
 
 9. Create a function `get_post`, that receives as input the original `ActionHash` for a post, and returns the latest update for that post in the form of a `ExternResult<Record>`.
