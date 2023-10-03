@@ -137,7 +137,7 @@ Solve the next steps in the `posts` zome, in `dna/zomes/posts/lib.rs`.
 
 3. Add a `channel` field of type `String` in the `CreatePostInput` struct.
 
-*Note: there are no tests for this step, so if you run `EXERCISE=2 STEP=3 npm test`, it won't result in an error.
+> Note: there are no tests for this step, so if you run `EXERCISE=2 STEP=3 npm test`, it won't result in an error.
 
 4. Create the given channel:
 
