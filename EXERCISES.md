@@ -4,6 +4,8 @@ You are going to re-implement this forum happ, one exercise at a time. Every exe
 
 These are the instructions for the first step, amenable to all the other steps:
 
+0. Run `nix develop`. This sets up your terminal with all the developer tooling necessary. Run ALL the commands below WITHIN this environment, otherwise they won't work.
+
 1. Run `EXERCISE=1 STEP=1 npm test`.
 
 - This is the error message you should see:
@@ -64,6 +66,19 @@ Solve the next steps in the `profiles` zome, in `dna/zomes/profiles/lib.rs`.
 - Modify the `create_profile` function: after the profile is created, create a link from the public key of the agent calling the function to the profile action hash, with `LinkTypes::AgentToProfile` as the link type.
 
 4. Create a function `get_agent_profile` that receives the public key for the agent we are looking the profile for, and returns the profile in an `ExternResult<Option<Profile>>`.
+
+- In general, to extract an entry in the form of its rust struct from a record that contains it, you can use [.to_app_option()](https://docs.rs/hdk/latest/hdk/prelude/enum.RecordEntry.html#method.to_app_option). For example, to convert a record from a `Comment` app struct: 
+
+```rust
+  let maybe_comment: Option<Comment> = record
+    .entry()
+    .to_app_option() // Extracts an entry in its rust struct form from a record
+    .map_err(|err| wasm_error!(err))?;
+
+  let comment: Comment = maybe_comment.ok_or(wasm_error!(WasmErrorInner::Guest(
+    "Could not deserialize record to comment.".into(),
+  )))?;
+```
 
 5. Create a function `get_my_profile` that doesn't receive any input parameters, and returns an `ExternResult<Option<Profile>>` with our own profile if we have created it.
 
