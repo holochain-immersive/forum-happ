@@ -41,6 +41,8 @@ error: could not compile `profiles` due to previous error
 
 With the "duplicate symbol" message, it means that you are running your tests with the wrong step number. Double-check that you are running the appropriate step for the code exercise you are trying to solve.
 
+> Notice that if you complete some steps, running the tests for any previous step will give this error as well. Only run the tests for the last step and exercise you have completed or are attempting.
+
 ## Exercise 1: Profiles zome
 
 We are going to create a zome that manages the profile information for the users. A user should be able to:
