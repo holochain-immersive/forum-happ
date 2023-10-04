@@ -72,14 +72,13 @@ Solve the next steps in the `profiles` zome, in `dna/zomes/profiles/lib.rs`.
 - In general, to extract an entry in the form of its rust struct from a record that contains it, you can use [.to_app_option()](https://docs.rs/hdk/latest/hdk/prelude/enum.RecordEntry.html#method.to_app_option). For example, to convert a record from a `Comment` app struct: 
 
 ```rust
-  let maybe_comment: Option<Comment> = record
-    .entry()
-    .to_app_option() // Extracts an entry in its rust struct form from a record
-    .map_err(|err| wasm_error!(err))?;
+let maybe_entry: Option<Entry> = record
+  .entry
+  .into_option();
 
-  let comment: Comment = maybe_comment.ok_or(wasm_error!(WasmErrorInner::Guest(
-    "Could not find any entry in this record.".into(),
-  )))?;
+let entry: Entry =  maybe_entry.ok_or(wasm_error!(WasmErrorInner::Guest(String::from("This record doesn't include any entry"))))?;
+
+let comment = Comment::try_from(entry)?;
 ```
 
 5. Create a function `get_my_profile` that doesn't receive any input parameters, and returns an `ExternResult<Option<Profile>>` with our own profile if we have created it.
