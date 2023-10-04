@@ -78,7 +78,7 @@ Solve the next steps in the `profiles` zome, in `dna/zomes/profiles/lib.rs`.
     .map_err(|err| wasm_error!(err))?;
 
   let comment: Comment = maybe_comment.ok_or(wasm_error!(WasmErrorInner::Guest(
-    "Could not deserialize record to comment.".into(),
+    "Could not find any entry in this record.".into(),
   )))?;
 ```
 
